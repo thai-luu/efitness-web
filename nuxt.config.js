@@ -37,8 +37,14 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/auth'
   ],
-
+  axios: {
+    serverBaseUrl: 'http://adminefitness.test',
+    browserBaseUrl: 'http://adminefitness.test/api',
+    baseURL: 'http://adminefitness.test/api'
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: [/^element-ui/],

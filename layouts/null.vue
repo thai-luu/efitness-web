@@ -1,5 +1,5 @@
 <template>
-    <p>test child router 1</p>
+    <nuxt />
 </template>
 <script>
 export default {
