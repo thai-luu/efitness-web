@@ -24,7 +24,8 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    '@/plugins/i18n.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -44,6 +45,37 @@ export default {
     serverBaseUrl: 'http://adminefitness.test',
     browserBaseUrl: 'http://adminefitness.test/api',
     baseURL: 'http://adminefitness.test/api'
+  },
+  auth: {
+    redirect: {
+      login: '/user/account/login',
+    },
+    strategies: {
+      local: {
+        token: {
+          propertyName: 'token',
+          global: true,
+          // required: true,
+          // type: 'Bearer'
+        },
+        endpoints: {
+          login: { 
+            url: 'http://adminefitness.test/api/auth/user/login',
+            method: 'post',
+            propertyName: 'access_token'
+          },
+          user: {
+            url: '/auth/user',
+            method: 'get',
+            propertyName: false
+          },
+          logout: false
+        }
+      },
+    }
+},
+  router: {
+    middleware: ['auth']
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {

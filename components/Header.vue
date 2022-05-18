@@ -34,14 +34,22 @@
               <a class="inline-block text-black no-underline hover:text-gray-800 hover:text-underline py-2 px-4" href="#">link</a>
             </li>
           </ul>
-          <a href="/user/account/register">
+          <el-menu v-if="$auth.loggedIn === true" mode="horizontal">
+            <el-submenu index="2">
+              <template slot="title">{{$auth.user.permissions[0].name}}</template>
+              <el-menu-item index="2-1"><a href="/test">Dashboard</a></el-menu-item>
+              <el-menu-item index="2-2" @click="logout">Logout</el-menu-item>
+            </el-submenu>
+          </el-menu>
+          <a v-else href="/user/account/register">
             <button
                 id="navAction"
                 class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full mt-4 lg:mt-0 py-4 px-8 shadow opacity-75 focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out"
             >
-                Sign in
+                Sign in/Register
             </button>
           </a>
+          
         </div>
       </div>
       <hr class="border-b border-gray-100 opacity-25 my-0 py-0" />
@@ -49,9 +57,16 @@
 </template>
 <script>
 export default {
-    
+    methods: {
+      async logout() {
+              await this.$axios.post('/auth/user/logout')
+              this.$auth.logout();
+          }
+    }
 }
 </script>
 <style scoped>
-
+  .el-menu{
+    background-color: transparent;
+  }
 </style>

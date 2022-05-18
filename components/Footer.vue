@@ -2,7 +2,7 @@
 <div class="bg-white">
       <div class="container mx-auto px-8">
         <div class="w-full flex flex-col md:flex-row py-6">
-          <div class="flex-1 mb-6 text-black">
+          <div class="flex-1 text-black flex flex-col items-start justify-between">
             <a class="text-pink-600 no-underline hover:no-underline font-bold text-2xl lg:text-4xl" href="#">
               <!--Icon from: http://www.potlabicons.com/ -->
               <svg class="h-8 fill-current inline" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512.005 512.005">
@@ -14,6 +14,17 @@
               </svg>
               LANDING
             </a>
+            <div class="w-48 flex">
+            <img class="w-8" src="@/assets/images/en.png" alt="" v-if="$i18n.locale == 'en'">
+            <img class="w-8" src="@/assets/images/vi.png" alt="" v-if="$i18n.locale == 'vi'">
+            <select class="bg-white rounded w-36 ml-1" v-model="$i18n.locale" @change="onChangeLanguage">
+              <option v-for="(item, index) in locales"
+                    :key="index"
+                    :label="item.label"
+                    :value="item.value"
+                />
+            </select>
+            </div>
           </div>
           <div class="flex-1">
             <p class="uppercase text-gray-500 md:mb-6">Links</p>
@@ -73,6 +84,19 @@
       <a href="https://www.freepik.com/free-photos-vectors/background" class="text-gray-500">Background vector created by freepik - www.freepik.com</a>
     </div>
 </template>
+<script>
+import { mapState } from 'vuex';
+export default {
+        computed: {
+            ...mapState('i18n', ['locale', 'locales']),
+        },
+        methods: {
+            onChangeLanguage() {
+                    this.$store.commit('i18n/set',this.$i18n.locale);
+            },
+        },
+}
+</script>
 <style scoped>
 .footer{
     

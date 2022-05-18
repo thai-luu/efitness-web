@@ -13,11 +13,12 @@ import LessonList from '../components/lesson/LessonList.vue'
 export default {
   name: 'IndexPage',
   layout: 'default',
+  auth: false,
   components:{
     Banner,
     DietList,
     LessonList
-  }
+  },
   
 }
 // var scrollpos = window.scrollY;
