@@ -14,6 +14,7 @@
               </svg>
               LANDING
             </a>
+<<<<<<< HEAD
             <div class="w-48 flex">
             <img class="w-8" src="@/assets/images/en.png" alt="" v-if="$i18n.locale == 'en'">
             <img class="w-8" src="@/assets/images/vi.png" alt="" v-if="$i18n.locale == 'vi'">
@@ -25,6 +26,8 @@
                 />
             </select>
             </div>
+=======
+>>>>>>> c2aaedac51cd21472f06cdf3b14c8346ca36d05a
           </div>
           <div class="flex-1">
             <p class="uppercase text-gray-500 md:mb-6">Links</p>
