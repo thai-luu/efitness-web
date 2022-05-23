@@ -1,0 +1,1 @@
+export const allExampleTrainningSession = (axios) => axios.get('/admin/lesson/emxample_lesson')

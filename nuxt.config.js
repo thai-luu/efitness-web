@@ -26,6 +26,7 @@ export default {
   plugins: [
     '@/plugins/element-ui',
     '@/plugins/i18n.js',
+    '@/plugins/fragment.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -43,8 +44,9 @@ export default {
   ],
   axios: {
     serverBaseUrl: 'http://adminefitness.test',
-    browserBaseUrl: 'http://adminefitness.test/api',
-    baseURL: 'http://adminefitness.test/api'
+    browserBaseUrl: 'http://adminefitness.test',
+    baseURL: 'http://adminefitness.test',
+    debug: true
   },
   auth: {
     redirect: {
@@ -65,7 +67,7 @@ export default {
             propertyName: 'access_token'
           },
           user: {
-            url: '/auth/user',
+            url: 'api/auth/user',
             method: 'get',
             propertyName: false
           },

@@ -1,0 +1,1 @@
+export const modeLists = (axios) => axios.get('/admin/mode').then(_ => _.data)

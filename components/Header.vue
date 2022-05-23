@@ -1,4 +1,5 @@
 <template>
+<header>
     <nav id="header" class="fixed w-full z-30 top-0 text-white">
       <div class="w-full container mx-auto flex flex-wrap items-center justify-between mt-0 py-2">
         <div class="pl-4 flex items-center">
@@ -37,8 +38,9 @@
           <el-menu v-if="$auth.loggedIn === true" mode="horizontal">
             <el-submenu index="2">
               <template slot="title">{{$auth.user.permissions[0].name}}</template>
-              <el-menu-item index="2-1"><a href="/test">Dashboard</a></el-menu-item>
-              <el-menu-item index="2-2" @click="logout">Logout</el-menu-item>
+              <el-menu-item index="2-1"><nuxt-link to="/test">Dashboard</nuxt-link></el-menu-item>
+              <el-menu-item v-if="$auth.user.permissions[0].name === 'QTV'" index="2-2"><nuxt-link to="/admin/example_lesson">Go to dashboard admin</nuxt-link></el-menu-item>
+              <el-menu-item index="2-3" @click="logout">Logout</el-menu-item>
             </el-submenu>
           </el-menu>
           <a v-else href="/user/account/register">
@@ -54,12 +56,13 @@
       </div>
       <hr class="border-b border-gray-100 opacity-25 my-0 py-0" />
     </nav>
+</header>
 </template>
 <script>
 export default {
     methods: {
       async logout() {
-              await this.$axios.post('/auth/user/logout')
+              await this.$axios.post('/api/auth/user/logout')
               this.$auth.logout();
           }
     }
