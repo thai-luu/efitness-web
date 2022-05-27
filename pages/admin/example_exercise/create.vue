@@ -1,7 +1,7 @@
 <template>
 <el-form ref="form" v-model="form" label-width="120px">
   <el-form-item label="Tên bài tập">
-    <el-input type="textarea" v-model="form.name"></el-input>
+    <el-input type="text" v-model="form.name"></el-input>
   </el-form-item>
   <el-form-item label="Mẹo tập">
     <el-input type="textarea" v-model="form.note"></el-input>
@@ -13,6 +13,9 @@
   </el-form-item>
   <el-form-item label="Video hướng dẫn">
     <el-input type="text" v-model="form.linkVd"></el-input>
+  </el-form-item>
+    <el-form-item label="Video hướng dẫn">
+    <el-input type="number" v-model="form.calories"></el-input>
   </el-form-item>
   <el-form-item>
     <el-button @click="onSubmit">Create</el-button>
@@ -49,6 +52,7 @@ export default {
       
         async onSubmit(){
           try{
+            console.log(this.form)
           await createExercise(this.$axios,this.form)
         }
       catch(err){

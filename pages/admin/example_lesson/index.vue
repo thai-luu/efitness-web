@@ -51,7 +51,7 @@
     </el-table>
   </div>
   <a href="/admin/example_lesson/create">
-  <el-button type="primary">
+  <el-button>
     Primary
   </el-button>
       </a>
