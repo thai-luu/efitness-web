@@ -1,6 +1,6 @@
 <template>
-<el-form ref="form" v-model="form" label-width="120px">
-  <el-form-item label="Activity zone" v-for="(exer,index) in form.exerciseList" :key="index">
+<el-form ref="form" v-model="training_session" label-width="120px">
+  <el-form-item label="Activity zone" v-for="(exer,index) in training_session.exercise" :key="index">
     <el-select v-model="exer.id" placeholder="please select your zone">
       <el-option v-for="(ex,index) in exercises" :key="ex.id" :label="ex.name" :value="ex.id">{{ex.name}}</el-option>
     </el-select>
@@ -11,7 +11,7 @@
     Add exercise
   </el-button>
   <el-form-item label="Activity form">
-    <el-input type="textarea" v-model="form.desc"></el-input>
+    <el-input type="textarea" v-model="training_session.desc"></el-input>
   </el-form-item>
   <el-form-item>
     <el-button @click="onSubmit">Create</el-button>
@@ -20,53 +20,44 @@
 </el-form>
 </template>
 <script>
-import { modeLists } from '~/api/mode';
 import { getExercises } from '~/api/exercise'
-import { create } from '~/api/training_session'
+import { edit } from '~/api/training_session'
+import { getTrainingSession } from '~/api/training_session';
 export default {
   props: {
   },
     layout:'admin',
-    data (){
-        return {
-            form:{
-                desc:'',
-                exerciseList: [{
-                    id:'', 
-                  }
-                ],
-                status: 1,
-            }
-        }
-    },
-    async asyncData({app}){
+    async asyncData({app,params}){
         try{
-        const modeList = await modeLists(app.$axios)
         const exercises = await getExercises(app.$axios)
-        return { modes:modeList, exercises:exercises }
+        const training_session = await getTrainingSession(app.$axios,params.id)
+        return { training_session:training_session, exercises:exercises }
         }catch(err){
             return { modes:[]}
         }
     },
     
    async created(){
-        console.log(this.modes,this.exercises,this.form)
+      // const training_session = await getTrainingSession(this.$axios,params.id)
+         console.log(this.training_session,this.$route.params)
+
     },
     methods:{
       async onSubmit(){
-        await create(this.$axios,this.form)
+        await edit(this.$axios,this.$route.params.id,this.training_session)
               
         },
         deleteEx(index){
           console.log(index)
-          this.form.exerciseList.splice(index,1)
+          this.training_session.exercise.splice(index,1)
         },
         addExercise(){
           const ex = {
             id:''
           }
-          this.form.exerciseList.push(ex)
-        }
+          this.training_session.exercise.push(ex)
+        },
+        
     }
 }
 </script>

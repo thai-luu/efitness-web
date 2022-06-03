@@ -2,12 +2,12 @@
 <div>
   <div class="bg-gray-800 pt-3">
     <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
-      <h1 class="font-bold pl-2">Traning session</h1>
+      <h1 class="font-bold pl-2">Lunchs</h1>
     </div>
   </div>
   <div class="flex flex-wrap">  
     <el-table
-      :data="training_sessions.data"
+      :data="diets.data"
       style="width: 100%">
       <el-table-column
         prop="id"
@@ -43,15 +43,15 @@
 </div>
 </template>
 <script>
-import { getAll } from '~/api/training_session';
+import { index } from '~/api/diet';
 export default {
     layout: 'admin',
     async asyncData({app}){
         try{
-            const training_sessions =  await getAll(app.$axios)
-            return  { training_sessions }
+            const diets =  await index(app.$axios)
+            return  { diets }
         }catch (err){
-          return {training_sessions:[] }
+          return {diets:[] }
         }
 
     },
@@ -61,10 +61,10 @@ export default {
     },
     methods:{
        onEdit(id) {
-        this.$router.push({path:`/admin/training_session/${id}/edit`})
+        this.$router.push({path:`/admin/example_diets/${id}/edit`})
             },
       add(){
-        this.$router.push({path:`/admin/training_session/create`})
+        this.$router.push({path:`/admin/example_diets/create`})
       }
     }
 

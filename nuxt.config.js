@@ -46,7 +46,7 @@ export default {
     serverBaseUrl: 'http://adminefitness.test',
     browserBaseUrl: 'http://adminefitness.test',
     baseURL: 'http://adminefitness.test',
-    debug: true
+    debug: false
   },
   auth: {
     redirect: {
@@ -77,7 +77,8 @@ export default {
     }
 },
   router: {
-    middleware: ['auth']
+    middleware: ['auth'],
+    routeNameSplitter: '/',
   },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
