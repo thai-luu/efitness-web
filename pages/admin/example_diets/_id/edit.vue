@@ -1,63 +1,64 @@
 <template>
-<el-form ref="form" v-model="training_session" label-width="120px">
-  <el-form-item label="Activity zone" v-for="(exer,index) in training_session.exercise" :key="index">
-    <el-select v-model="exer.id" placeholder="please select your zone">
-      <el-option v-for="(ex,index) in exercises" :key="ex.id" :label="ex.name" :value="ex.id">{{ex.name}}</el-option>
-    </el-select>
-    <el-button @click="deleteEx(index)"><i class="el-icon-delete"></i></el-button>
-    <!-- <el-input v-model="exer.name"></el-input> -->
+<el-form ref="form" v-model="diet" label-width="120px">
+  <el-form-item label="Tên">
+    <el-input type="text" v-model="diet.name"></el-input>
   </el-form-item>
-  <el-button @click="addExercise">
-    Add exercise
-  </el-button>
-  <el-form-item label="Activity form">
-    <el-input type="textarea" v-model="training_session.desc"></el-input>
+  <el-form-item label="Dành cho">
+    <el-select v-model="diet.mode_id" placeholder="please select your zone">
+      <el-option v-for="(mode,index) in modes" :key="mode.id" :label="mode.name" :value="mode.id">{{mode.name}}</el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item label="Mục tiêu">
+    <el-select v-model="diet.target_id" placeholder="please select your zone">
+      <el-option v-for="(target,index) in targets" :key="target.id" :label="target.name" :value="target.id">{{target.name}}</el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item label="Protein">
+    <el-input type="number" v-model="diet.protein">%</el-input>
+  </el-form-item>
+  <el-form-item label="Carb">
+    <el-input type="number" v-model="diet.carb">%</el-input>
+  </el-form-item>
+  <el-form-item label="Fat">
+    <el-input type="number" v-model="diet.fat">%</el-input>
+  </el-form-item>
+  <el-form-item label="Cenluloza">
+    <el-input type="number" v-model="diet.cenluloza">%</el-input>
   </el-form-item>
   <el-form-item>
-    <el-button @click="onSubmit">Create</el-button>
+    <el-button @click="onSubmit">Update</el-button>
     <el-button>Cancel</el-button>
   </el-form-item>
 </el-form>
 </template>
 <script>
-import { getExercises } from '~/api/exercise'
-import { edit } from '~/api/training_session'
-import { getTrainingSession } from '~/api/training_session';
+import { show,update } from '~/api/diet'
+import { modeLists } from '~/api/mode';
+import { index } from '~/api/target'
 export default {
   props: {
   },
     layout:'admin',
     async asyncData({app,params}){
         try{
-        const exercises = await getExercises(app.$axios)
-        const training_session = await getTrainingSession(app.$axios,params.id)
-        return { training_session:training_session, exercises:exercises }
+        const diet = await show(app.$axios)
+        const modes = await modeLists(app.$axios,params.id)
+        const targets = await index(app.$axios,params.id)
+        return { diet:diet, modes:modes,targets:targets }
         }catch(err){
-            return { modes:[]}
+            return { diet:[],modeLists:[],targets:[]}
         }
     },
     
    async created(){
       // const training_session = await getTrainingSession(this.$axios,params.id)
-         console.log(this.training_session,this.$route.params)
+         console.log(this.diet,this.$route.params)
 
     },
     methods:{
       async onSubmit(){
-        await edit(this.$axios,this.$route.params.id,this.training_session)
-              
+        await update(this.$axios,this.$route.params.id,this.diet)           
         },
-        deleteEx(index){
-          console.log(index)
-          this.training_session.exercise.splice(index,1)
-        },
-        addExercise(){
-          const ex = {
-            id:''
-          }
-          this.training_session.exercise.push(ex)
-        },
-        
     }
 }
 </script>

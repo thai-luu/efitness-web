@@ -2,12 +2,12 @@
 <div>
   <div class="bg-gray-800 pt-3">
     <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
-      <h1 class="font-bold pl-2">Lunchs</h1>
+      <h1 class="font-bold pl-2">Diets</h1>
     </div>
   </div>
   <div class="flex flex-wrap">  
     <el-table
-      :data="diets.data"
+      :data="diets"
       style="width: 100%">
       <el-table-column
         prop="id"
@@ -15,14 +15,43 @@
         width="150">
       </el-table-column>
       <el-table-column
-        prop="desc"
-        label="Description"
+        prop="name"
+        label="Name"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="status"
-        label="Status"
+        prop="protein"
+        label="protein"
         width="120">
+      </el-table-column>
+      <el-table-column
+        prop="fat"
+        label="fat"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="carb"
+        label="carb"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="cenluloza"
+        label="cenluloza"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        label="Mode"
+        width="120">
+        <template slot-scope="{row}">
+          <p>{{row.name}}</p>
+        </template>
+      </el-table-column>
+      <el-table-column
+        label="Target"
+        width="120">
+        <template slot-scope="{row}">
+          <p>{{row.name}}</p>
+        </template>
       </el-table-column>
       <el-table-column
         fixed="right"
@@ -57,7 +86,7 @@ export default {
     },
     created(){
       //  const training_sessions =  await getAll(this.$axios)
-      console.log(this.training_sessions)
+      console.log(this.diets)
     },
     methods:{
        onEdit(id) {

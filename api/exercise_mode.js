@@ -1,0 +1,1 @@
+export const index = (axios) => axios.get('/api/exercise-mode').then(_ => _.data)

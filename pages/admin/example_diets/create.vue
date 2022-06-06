@@ -3,21 +3,27 @@
   <el-form-item label="Tên">
     <el-input type="text" v-model="form.name"></el-input>
   </el-form-item>
-  <el-form-item label="Mô tả">
-    <el-input type="textarea" v-model="form.note"></el-input>
-  </el-form-item>
   <el-form-item label="Dành cho">
     <el-select v-model="form.mode_id" placeholder="please select your zone">
-      <el-option v-for="(mode,index) in modes" :key="mode.id" :label="mode.name_vi" :value="mode.id">{{mode.name_vi}}</el-option>
+      <el-option v-for="(mode,index) in modes" :key="mode.id" :label="mode.name" :value="mode.id">{{mode.name}}</el-option>
     </el-select>
   </el-form-item>
   <el-form-item label="Mục tiêu">
     <el-select v-model="form.target_id" placeholder="please select your zone">
-      <el-option v-for="(target,index) in targets" :key="mode.id" :label="target.name_vi" :value="target.id">{{target.name_vi}}</el-option>
+      <el-option v-for="(target,index) in targets" :key="target.id" :label="target.name" :value="target.id">{{target.name}}</el-option>
     </el-select>
   </el-form-item>
-    <el-form-item label="Video hướng dẫn">
-    <el-input type="number" v-model="form.calories"></el-input>
+  <el-form-item label="Protein">
+    <el-input type="number" v-model="form.protein">%</el-input>
+  </el-form-item>
+  <el-form-item label="Carb">
+    <el-input type="number" v-model="form.carb">%</el-input>
+  </el-form-item>
+  <el-form-item label="Fat">
+    <el-input type="number" v-model="form.fat">%</el-input>
+  </el-form-item>
+  <el-form-item label="Cenluloza">
+    <el-input type="number" v-model="form.cenluloza">%</el-input>
   </el-form-item>
   <el-form-item>
     <el-button @click="onSubmit">Create</el-button>
@@ -35,11 +41,14 @@ export default {
     data (){
       return {
         form:{
-          level_id:null,
-          note:'',
+          carb:'',
+          fat:'',
           name:'',
           calories:'',
-          linkVd:'',
+          protein:'',
+          cenluloza:'',
+          mode_id:'',
+          target_id:'',
         }
       }
     },
@@ -54,6 +63,11 @@ export default {
               targets:[]
             }
         }
+    },
+    async created(){
+      const modes = await modeLists(this.$axios)
+      const targets = await index(this.$axios)
+      console.log(modes,targets)
     },
     methods:{
       

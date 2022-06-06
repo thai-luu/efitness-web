@@ -27,8 +27,8 @@ export default {
     '@/plugins/element-ui',
     '@/plugins/i18n.js',
     '@/plugins/fragment.js',
+    '@/plugins/swiper.js'
   ],
-
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
 
@@ -89,5 +89,6 @@ export default {
         autoprefixer: {},
       },
     },
+    vendor: ['aframe']
   }
 }

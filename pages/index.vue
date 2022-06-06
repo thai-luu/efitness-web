@@ -1,8 +1,8 @@
 <template>
 <div>
   <Banner />
-  <diet-list />
-  <lesson-list />
+  <diet-list :diets="diets" />
+  <lesson-list :exercise_modes="exercise_modes" />
 </div>
 </template>
 
@@ -10,7 +10,21 @@
 import Banner from '~/components/Banner.vue'
 import DietList from '../components/diet/DietList.vue'
 import LessonList from '../components/lesson/LessonList.vue'
+import { index as allDiet } from '~/api/diet'
+import { index as allExerciseMode } from '~/api/exercise_mode'
 export default {
+  async asyncData({app}){
+        try{
+            const diets =  await allDiet(app.$axios)
+            const exercise_modes =  await allExerciseMode(app.$axios)
+            return  { diets:diets, exercise_modes:exercise_modes }
+        }catch (err){
+          return {diets:[],exercise_modes:[] }
+        }
+
+    }, 
+  methods: {
+  },
   name: 'IndexPage',
   layout: 'default',
   auth: false,

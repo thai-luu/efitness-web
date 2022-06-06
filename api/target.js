@@ -1,1 +1,1 @@
-export const index = (axios) => axios.get('/admin/target').then(_ => _.data)
+export const index = (axios) => axios.get('/api/target').then(_ => _.data)

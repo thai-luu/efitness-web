@@ -2,12 +2,12 @@
 <div>
   <div class="bg-gray-800 pt-3">
     <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
-      <h1 class="font-bold pl-2">Traning session</h1>
+      <h1 class="font-bold pl-2">Food</h1>
     </div>
   </div>
   <div class="flex flex-wrap">  
     <el-table
-      :data="training_sessions.data"
+      :data="foods"
       style="width: 100%">
       <el-table-column
         prop="id"
@@ -15,13 +15,58 @@
         width="150">
       </el-table-column>
       <el-table-column
-        prop="desc"
-        label="Description"
+        prop="name"
+        label="Name"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="status"
-        label="Status"
+        prop="carb"
+        label="Carb"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="protein"
+        label="Protein"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="fat"
+        label="Fat"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="cenluloza"
+        label="Cenluloza"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="vitaminA"
+        label="VitaminA"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="vitaminB"
+        label="VitaminB"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="natri"
+        label="Natri"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="kali"
+        label="Kali"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="classify"
+        label="Classify"
+        width="120">
+      </el-table-column>
+      <el-table-column
+        prop="calo"
+        label="Calo"
         width="120">
       </el-table-column>
       <el-table-column
@@ -43,28 +88,29 @@
 </div>
 </template>
 <script>
-import { getAll } from '~/api/training_session';
+import { index } from '~/api/food';
 export default {
     layout: 'admin',
     async asyncData({app}){
         try{
-            const training_sessions =  await getAll(app.$axios)
-            return  { training_sessions }
+            const foods =  await index(app.$axios)
+            return  { foods }
         }catch (err){
-          return {training_sessions:[] }
+          return {foods:[] }
         }
 
     },
-    created(){
+    async created(){
       //  const training_sessions =  await getAll(this.$axios)
-      console.log(this.training_sessions)
+      const foods =  await index(this.$axios)
+      console.log(foods)
     },
     methods:{
        onEdit(id) {
-        this.$router.push({path:`/admin/training_session/${id}/edit`})
+        this.$router.push({path:`/admin/food/${id}/edit`})
             },
       add(){
-        this.$router.push({path:`/admin/training_session/create`})
+        this.$router.push({path:`/admin/food/create`})
       }
     }
 
