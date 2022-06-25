@@ -39,7 +39,7 @@ export default {
     
    async created(){
       // const training_session = await getTrainingSession(this.$axios,params.id)
-         console.log(this.training_session,this.$route.params)
+         
 
     },
     methods:{
@@ -48,7 +48,7 @@ export default {
               
         },
         deleteEx(index){
-          console.log(index)
+          
           this.training_session.exercise.splice(index,1)
         },
         addExercise(){

@@ -35,7 +35,7 @@ export default {
         }
     },
    async created(){
-        console.log(this.modes)
+       
     },
     methods:{
         onSubmit(){

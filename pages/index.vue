@@ -1,21 +1,30 @@
 <template>
 <div>
-  <Banner />
   <diet-list :diets="diets" />
   <lesson-list :exercise_modes="exercise_modes" />
 </div>
 </template>
 
 <script>
-import Banner from '~/components/Banner.vue'
+
 import DietList from '../components/diet/DietList.vue'
 import LessonList from '../components/lesson/LessonList.vue'
-import { index as allDiet } from '~/api/diet'
+import { indexWeb } from '~/api/diet'
 import { index as allExerciseMode } from '~/api/exercise_mode'
+import { mapState } from 'vuex';
 export default {
-  async asyncData({app}){
+  name: 'IndexPage',
+  layout: 'default',
+  auth: false,
+  components:{
+    DietList,
+    LessonList
+  },
+  async asyncData({app, store}){
+     await store.dispatch('static/fetch',app.$axios)
+     
         try{
-            const diets =  await allDiet(app.$axios)
+            const diets =  await indexWeb(app.$axios)
             const exercise_modes =  await allExerciseMode(app.$axios)
             return  { diets:diets, exercise_modes:exercise_modes }
         }catch (err){
@@ -24,15 +33,22 @@ export default {
 
     }, 
   methods: {
+    setLocalStore(){
+      if(process.client){
+        localStorage.setItem('targets', JSON.stringify(this.targets))
+        localStorage.setItem('levels', JSON.stringify(this.levels))
+        localStorage.setItem('modes', JSON.stringify(this.modes))
+      }
+    }
   },
-  name: 'IndexPage',
-  layout: 'default',
-  auth: false,
-  components:{
-    Banner,
-    DietList,
-    LessonList
-  },
+  computed:{
+        ...mapState('static',['targets', 'levels', 'modes'])
+    },
+  async created(){
+    this.setLocalStore()
+    const diets =  await indexWeb(this.$axios)
+   
+  }
   
 }
 // var scrollpos = window.scrollY;

@@ -1,0 +1,1 @@
+export const update = (axios, id, data) => axios.put(`/api/auth/user/${id}/update`, data)

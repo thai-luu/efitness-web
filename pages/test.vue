@@ -1,59 +1,106 @@
 <template>
-    <div class="flex items-center justify-center min-h-screen bg-gray-100">
-    <div class="px-8 py-6 mx-4 mt-4 text-left bg-white shadow-lg md:w-1/3 lg:w-1/3 sm:w-1/3">
-        <h3 class="text-2xl font-bold text-center">Login</h3>
-        <div :v-model="form">
-            <div class="mt-4">
-                <div>
-                    <label class="block" for="Name">Name</label>
-                            <input type="text" placeholder="Name"
-                                class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600" v-model="form.name">
-                </div>
-                <div class="mt-4">
-                    <label class="block" for="email">Email</label>
-                            <input type="text" placeholder="Email"
-                                class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600" v-model="form.email">
-                </div>
-                <div class="mt-4">
-                    <label class="block">Password</label>
-                            <input type="password" placeholder="Password"
-                                class="w-full px-4 py-2 mt-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-blue-600" v-model="form.password">
-                </div>
-                <div class="flex">
-                    <button class="w-full px-6 py-2 mt-4 text-white bg-blue-600 rounded-lg hover:bg-blue-900" @click="login">
-                        Login
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="120px" class="demo-ruleForm">
+  <el-form-item label="Activity name" prop="name">
+    <el-input v-model="ruleForm.name"></el-input>
+  </el-form-item>
+  <el-form-item label="Activity zone" prop="regionsss.id">
+    <el-select v-model="ruleForm.regionsss.id" placeholder="Activity zone">
+      <el-option v-for="index in 4" :label="index" :value="index"></el-option>
+    </el-select>
+  </el-form-item>
+  <el-form-item label="Activity time" required>
+    <el-col :span="11">
+      <el-form-item prop="date1">
+        <el-date-picker type="date" placeholder="Pick a date" v-model="ruleForm.date1" style="width: 100%;"></el-date-picker>
+      </el-form-item>
+    </el-col>
+    <el-col class="line" :span="2">-</el-col>
+    <el-col :span="11">
+      <el-form-item prop="date2">
+        <el-time-picker placeholder="Pick a time" v-model="ruleForm.date2" style="width: 100%;"></el-time-picker>
+      </el-form-item>
+    </el-col>
+  </el-form-item>
+  <el-form-item label="Instant delivery" prop="delivery">
+    <el-switch v-model="ruleForm.delivery"></el-switch>
+  </el-form-item>
+  <el-form-item label="Activity type" prop="type">
+    <el-checkbox-group v-model="ruleForm.type">
+      <el-checkbox label="Online activities" name="type"></el-checkbox>
+      <el-checkbox label="Promotion activities" name="type"></el-checkbox>
+      <el-checkbox label="Offline activities" name="type"></el-checkbox>
+      <el-checkbox label="Simple brand exposure" name="type"></el-checkbox>
+    </el-checkbox-group>
+  </el-form-item>
+  <el-form-item label="Resources" prop="resource">
+    <el-radio-group v-model="ruleForm.resource">
+      <el-radio label="Sponsorship"></el-radio>
+      <el-radio label="Venue"></el-radio>
+    </el-radio-group>
+  </el-form-item>
+  <el-form-item label="Activity form" prop="desc">
+    <el-input type="textarea" v-model="ruleForm.desc"></el-input>
+  </el-form-item>
+  <el-form-item>
+    <el-button type="primary" @click="submitForm('ruleForm')">Create</el-button>
+    <el-button @click="resetForm('ruleForm')">Reset</el-button>
+  </el-form-item>
+</el-form>
 </template>
 <script>
-export default {
-    layout: 'null',
-    data () {
-        return {
-        form: {
-            name:'',
-            email:'',
-            password: '',
+  export default {
+    data() {
+      return {
+        ruleForm: {
+          name: '',
+          regionsss: '',
+          date1: '',
+          date2: '',
+          delivery: false,
+          type: [],
+          resource: '',
+          desc: ''
+        },
+        rules: {
+          name: [
+            { required: true, message: 'Please input Activity name', trigger: 'blur' },
+            { min: 3, max: 5, message: 'Length should be 3 to 5', trigger: 'blur' }
+          ],
+          'regionsss.id': [
+            { required: true, message: 'Please select Activity zone', trigger: 'change' }
+          ],
+          date1: [
+            { type: 'date', required: true, message: 'Please pick a date', trigger: 'change' }
+          ],
+          date2: [
+            { type: 'date', required: true, message: 'Please pick a time', trigger: 'change' }
+          ],
+          type: [
+            { type: 'array', required: true, message: 'Please select at least one activity type', trigger: 'change' }
+          ],
+          resource: [
+            { required: true, message: 'Please select activity resource', trigger: 'change' }
+          ],
+          desc: [
+            { required: true, message: 'Please input activity form', trigger: 'blur' }
+          ]
         }
-        }
+      };
     },
     methods: {
-        async login(){
-         try{ 
-                await this.$axios.get('/auth/test');
-                     this.$router.push('/');
-         }
-        catch (err) {
-                this.$notify.error({
-                    title: 'Error',
-                    message: 'Sai email hoặc mật khẩu'
-                })
-                }
-        }
+      submitForm() {
+        this.$refs['ruleForm'].validate((valid) => {
+          if (valid) {
+            alert('submit!');
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      }
     }
-}
+  }
 </script>

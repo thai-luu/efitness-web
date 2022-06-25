@@ -57,7 +57,7 @@ export default {
     },
     created(){
       //  const training_sessions =  await getAll(this.$axios)
-      console.log(this.training_sessions)
+      
     },
     methods:{
        onEdit(id) {

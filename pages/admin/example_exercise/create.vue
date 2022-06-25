@@ -52,7 +52,7 @@ export default {
       
         async onSubmit(){
           try{
-            console.log(this.form)
+           
           await createExercise(this.$axios,this.form)
         }
       catch(err){

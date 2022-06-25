@@ -43,14 +43,14 @@
         label="Mode"
         width="120">
         <template slot-scope="{row}">
-          <p>{{row.name}}</p>
+          <p>{{row.mode.name}}</p>
         </template>
       </el-table-column>
       <el-table-column
         label="Target"
         width="120">
         <template slot-scope="{row}">
-          <p>{{row.name}}</p>
+          <p>{{row.target.name}}</p>
         </template>
       </el-table-column>
       <el-table-column
@@ -84,9 +84,9 @@ export default {
         }
 
     },
-    created(){
-      //  const training_sessions =  await getAll(this.$axios)
-      console.log(this.diets)
+   async created(){
+      const diets =  await index(this.$axios)
+      
     },
     methods:{
        onEdit(id) {

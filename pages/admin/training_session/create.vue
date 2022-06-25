@@ -50,7 +50,7 @@ export default {
     },
     
    async created(){
-        console.log(this.modes,this.exercises,this.form)
+        
     },
     methods:{
       async onSubmit(){
@@ -58,7 +58,7 @@ export default {
               
         },
         deleteEx(index){
-          console.log(index)
+          
           this.form.exerciseList.splice(index,1)
         },
         addExercise(){

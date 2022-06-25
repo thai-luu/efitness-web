@@ -75,7 +75,7 @@ export default {
     
    async created(){
      const classifies = await index(this.$axios)
-        console.log(classifies)
+        
     },
     methods:{
       async onSubmit(){

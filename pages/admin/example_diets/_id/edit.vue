@@ -34,7 +34,7 @@
 <script>
 import { show,update } from '~/api/diet'
 import { modeLists } from '~/api/mode';
-import { index } from '~/api/target'
+import { indexTargets } from '~/api/static'
 export default {
   props: {
   },
@@ -43,7 +43,7 @@ export default {
         try{
         const diet = await show(app.$axios)
         const modes = await modeLists(app.$axios,params.id)
-        const targets = await index(app.$axios,params.id)
+        const targets = await indexTargets(app.$axios,params.id)
         return { diet:diet, modes:modes,targets:targets }
         }catch(err){
             return { diet:[],modeLists:[],targets:[]}
@@ -52,7 +52,7 @@ export default {
     
    async created(){
       // const training_session = await getTrainingSession(this.$axios,params.id)
-         console.log(this.diet,this.$route.params)
+         
 
     },
     methods:{

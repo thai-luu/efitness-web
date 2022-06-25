@@ -89,21 +89,25 @@
 </template>
 <script>
 import { index } from '~/api/food';
+import { mapState } from 'vuex';
+  
 export default {
     layout: 'admin',
-    async asyncData({app}){
+    async asyncData({app,store}){
+      await store.dispatch('static/fetch',app.$axios)
         try{
             const foods =  await index(app.$axios)
             return  { foods }
         }catch (err){
           return {foods:[] }
         }
-
+        
     },
     async created(){
       //  const training_sessions =  await getAll(this.$axios)
       const foods =  await index(this.$axios)
-      console.log(foods)
+      this.$store.dispatch('static/fetch',this.$axios)
+      
     },
     methods:{
        onEdit(id) {

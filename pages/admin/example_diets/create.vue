@@ -14,16 +14,24 @@
     </el-select>
   </el-form-item>
   <el-form-item label="Protein">
-    <el-input type="number" v-model="form.protein">%</el-input>
+    <el-input type="number" v-model="form.protein">
+      <template slot="append">%</template>
+    </el-input>
   </el-form-item>
   <el-form-item label="Carb">
-    <el-input type="number" v-model="form.carb">%</el-input>
+    <el-input type="number" v-model="form.carb">
+      <template slot="append">%</template>
+    </el-input>
   </el-form-item>
   <el-form-item label="Fat">
-    <el-input type="number" v-model="form.fat">%</el-input>
+    <el-input type="number" v-model="form.fat">
+      <template slot="append">%</template>
+    </el-input>
   </el-form-item>
   <el-form-item label="Cenluloza">
-    <el-input type="number" v-model="form.cenluloza">%</el-input>
+    <el-input type="number" v-model="form.cenluloza">
+      <template slot="append">%</template>
+    </el-input>
   </el-form-item>
   <el-form-item>
     <el-button @click="onSubmit">Create</el-button>
@@ -33,7 +41,8 @@
 </template>
 <script>
 import { modeLists } from '~/api/mode';
-import { index } from '~/api/target'
+import { indexTargets } from '~/api/static'
+import { create } from '~/api/diet'
 export default {
   props: {
   },
@@ -55,7 +64,7 @@ export default {
     async asyncData({app}){
         try{
         const modes = await modeLists(app.$axios)
-        const targets = await index(app.$axios)
+        const targets = await indexTargets(app.$axios)
         return { modes , targets }
         }catch(err){
             return { 
@@ -67,14 +76,14 @@ export default {
     async created(){
       const modes = await modeLists(this.$axios)
       const targets = await index(this.$axios)
-      console.log(modes,targets)
+      
     },
     methods:{
-      
         async onSubmit(){
           try{
-            console.log(this.form)
-          await createExercise(this.$axios,this.form)
+            
+          await create(this.$axios,this.form)
+          
         }
       catch(err){
         this.$notify.error('Some thing went wrong')

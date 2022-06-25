@@ -89,6 +89,14 @@ export default {
         autoprefixer: {},
       },
     },
-    vendor: ['aframe']
+    vendor: ['aframe'],
+    loaders: {
+      sass: {
+        implementation: require('sass'),
+      },
+      scss: {
+        implementation: require('sass'),
+      },
+    },
   }
 }

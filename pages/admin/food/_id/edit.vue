@@ -60,7 +60,7 @@ export default {
     
    async created(){
       const food = await show(this.$axios,this.$route.params.id)
-         console.log(food)
+        
 
     },
     methods:{
