@@ -80,6 +80,7 @@
       </el-table-column>
     </el-table>
   </div>
+  <pagination v-bind="{ currentPage, total, pageSize }" />
   <!-- <a href="/admin/training_session/create"> -->
   <el-button type="success" plain @click="add()">
     Create
@@ -90,18 +91,30 @@
 <script>
 import { index } from '~/api/food';
 import { mapState } from 'vuex';
-  
+import Pagination from '~/components/shared/Pagination.vue'
+
 export default {
     layout: 'admin',
-    async asyncData({app}){
+    components: {
+      Pagination
+    },
+
+    async asyncData({app, query}){
         try{
-            const foods =  await index(app.$axios)
-            return  { foods }
+            const foods =  await index(app.$axios, query)
+            return  { 
+              foods: foods.data,
+              total: foods.meta.total,
+              pageSize: foods.meta.per_page,
+              currentPage: foods.meta.current_page,
+            }
         }catch (err){
           return {foods:[] }
         }
         
     },
+    
+    watchQuery: true,
 
     methods:{
        onEdit(id) {

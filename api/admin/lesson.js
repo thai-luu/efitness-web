@@ -1,0 +1,1 @@
+export const store = (axios, data) => axios.post('/admin/lesson', data)
