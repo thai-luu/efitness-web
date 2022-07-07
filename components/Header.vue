@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div class="header">
 		<div x-data="{ open: false }" class="w-full text-gray-700 bg-cream">
         <div class="flex flex-col max-w-screen-xl px-8 mx-auto md:items-center md:justify-between md:flex-row">
             <div class="flex flex-row items-center justify-between py-6">
@@ -65,10 +65,19 @@ export default {
           }
     },
     created() {
-      console.log(this.$auth.user.data.permissions)
     }
 }
 </script>
-<style scoped>
-
+<style lang="scss">
+.header{
+  .el-menu-item.is-active{
+    border-bottom-color: #67C23A !important;
+    color: #67C23A !important;
+    border-bottom: 2px solid #67C23A !important;
+  }
+  .el-submenu__title{
+    color: #67C23A !important;
+    border-bottom: 2px solid #67C23A !important;
+  }
+}
 </style>

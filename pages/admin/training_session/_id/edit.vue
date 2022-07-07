@@ -21,8 +21,8 @@
 </template>
 <script>
 import { getExercises } from '~/api/exercise'
-import { edit } from '~/api/training_session'
-import { getTrainingSession } from '~/api/training_session';
+import { edit } from '~/api/admin/training_session'
+import { getTrainingSession } from '~/api/admin/training_session';
 export default {
   props: {
   },

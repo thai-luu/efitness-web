@@ -81,8 +81,8 @@
     </el-table>
   </div>
   <!-- <a href="/admin/training_session/create"> -->
-  <el-button @click="add()">
-    Primary
+  <el-button type="success" plain @click="add()">
+    Create
   </el-button>
       <!-- </a> -->
 </div>
@@ -93,8 +93,7 @@ import { mapState } from 'vuex';
   
 export default {
     layout: 'admin',
-    async asyncData({app,store}){
-      await store.dispatch('static/fetch',app.$axios)
+    async asyncData({app}){
         try{
             const foods =  await index(app.$axios)
             return  { foods }
@@ -103,12 +102,7 @@ export default {
         }
         
     },
-    async created(){
-      //  const training_sessions =  await getAll(this.$axios)
-      const foods =  await index(this.$axios)
-      this.$store.dispatch('static/fetch',this.$axios)
-      
-    },
+
     methods:{
        onEdit(id) {
         this.$router.push({path:`/admin/food/${id}/edit`})

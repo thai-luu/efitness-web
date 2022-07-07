@@ -7,7 +7,7 @@
   </div>
   <div class="flex flex-wrap">  
     <el-table
-      :data="training_sessions.data"
+      :data="training_sessions"
       style="width: 100%">
       <el-table-column
         prop="id"
@@ -35,21 +35,33 @@
       </el-table-column>
     </el-table>
   </div>
+  <pagination v-bind="{ currentPage, total, pageSize }" />
   <!-- <a href="/admin/training_session/create"> -->
-  <el-button @click="add()">
-    Primary
+  <el-button type="success" plain @click="add()">
+    Create
   </el-button>
       <!-- </a> -->
 </div>
 </template>
 <script>
-import { getAll } from '~/api/training_session';
+import { getAll } from '~/api/admin/training_session';
+import Pagination from '~/components/shared/Pagination.vue'
 export default {
     layout: 'admin',
-    async asyncData({app}){
+
+    components: {
+      Pagination
+    },
+
+    async asyncData({app, query}){
         try{
-            const training_sessions =  await getAll(app.$axios)
-            return  { training_sessions }
+            const training_sessions =  await getAll(app.$axios, query)
+            return  { 
+              training_sessions: training_sessions.data,
+              total: training_sessions.total,
+              pageSize: training_sessions.per_page,
+              currentPage: training_sessions.current_page,
+              }
         }catch (err){
           return {training_sessions:[] }
         }
@@ -57,8 +69,12 @@ export default {
     },
     created(){
       //  const training_sessions =  await getAll(this.$axios)
+      console.log(this.training_sessions)
       
     },
+    
+    watchQuery: true,
+
     methods:{
        onEdit(id) {
         this.$router.push({path:`/admin/training_session/${id}/edit`})

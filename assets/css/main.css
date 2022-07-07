@@ -1,6 +1,3 @@
 @tailwind base;
-html {
-    @apply text-black;
-} 
 @tailwind components;
 @tailwind utilities;

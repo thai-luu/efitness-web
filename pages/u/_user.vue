@@ -1,5 +1,5 @@
 <template>
-<div class="container mx-auto">
+<div class="container mx-auto header-profile">
     <el-menu
             ref="menu"
             mode="horizontal"
@@ -13,7 +13,7 @@
                 <el-menu-item :index="`${route}/diet`">Diet</el-menu-item>
                 <el-menu-item :index="`${route}/training_session`">Training Session</el-menu-item>
       </el-menu>
-      <div class="h-screen">
+      <div class="min-h-screen px-5 py-5">
       <nuxt-child/>
       </div>
 
@@ -57,3 +57,12 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+.header-profile{
+  .el-menu-item.is-active{
+      border-bottom-color: #67C23A !important;
+      color: #67C23A !important;
+      border-bottom: 2px solid #67C23A !important;
+  }
+}
+</style>

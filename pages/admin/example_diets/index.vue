@@ -65,8 +65,8 @@
     </el-table>
   </div>
   <!-- <a href="/admin/training_session/create"> -->
-  <el-button @click="add()">
-    Primary
+  <el-button type="success" plain @click="add()">
+    Create
   </el-button>
       <!-- </a> -->
 </div>
@@ -84,10 +84,7 @@ export default {
         }
 
     },
-   async created(){
-      const diets =  await index(this.$axios)
-      
-    },
+
     methods:{
        onEdit(id) {
         this.$router.push({path:`/admin/example_diets/${id}/edit`})

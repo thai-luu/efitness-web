@@ -38,11 +38,12 @@ export default {
         localStorage.setItem('targets', JSON.stringify(this.targets))
         localStorage.setItem('levels', JSON.stringify(this.levels))
         localStorage.setItem('modes', JSON.stringify(this.modes))
+        localStorage.setItem('foods', JSON.stringify(this.foods))
       }
     }
   },
   computed:{
-        ...mapState('static',['targets', 'levels', 'modes'])
+        ...mapState('static',['targets', 'levels', 'modes', 'foods'])
     },
   async created(){
     this.setLocalStore()

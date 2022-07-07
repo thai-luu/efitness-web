@@ -42,7 +42,7 @@
         </el-form-item>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="onSubmit">Create</el-button>
+            <el-button type="success" plain @click="onSubmit">Create</el-button>
             <el-button @click="dialogVisible = false">Cancel</el-button>
         </el-form-item>
         </el-form>
@@ -169,7 +169,7 @@ export default {
     },
     created(){
        this.getStoreLocal()
-       console.log(this.form, this.$auth.user, this.targets, this.levels)
+      
     },
 
 }

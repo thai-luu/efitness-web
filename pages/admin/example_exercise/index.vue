@@ -48,8 +48,8 @@
     </el-table>
   </div>
   <a href="/admin/example_exercise/create">
-  <el-button>
-    Primary
+  <el-button type="success" plain>
+    Create
   </el-button>
       </a>
 </fragment>

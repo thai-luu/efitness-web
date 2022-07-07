@@ -1,8 +1,10 @@
-import { indexLevels, indexTargets, modeLists } from '~/api/static' 
+import { indexLevels, indexTargets, modeLists, foodList } from '~/api/static' 
 const state = () => ({
     targets: [],
     levels: [],
-    modes: []
+    modes: [],
+    foods: [],
+
 });
 
 const actions = {
@@ -10,9 +12,12 @@ const actions = {
         const targets = await indexTargets(axios);
         const levels = await indexLevels(axios);
         const modes = await modeLists(axios);
+        const foods = await foodList(axios);
         commit('setTarget', targets);
         commit('setLevel', levels);
         commit('setMode', modes);
+        commit('setFoods', foods.data);
+
     },
 };
 
@@ -31,6 +36,12 @@ const mutations = {
         state.modes = modes;
 
     },
+
+    setFoods(state, foods) {
+        state.foods = foods;
+
+    },
+
 };
 
 export default {
