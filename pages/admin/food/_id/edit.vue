@@ -42,7 +42,7 @@
 </el-form>
 </template>
 <script>
-import { show,update } from '~/api/food'
+import { show,update } from '~/api/admin/food'
 import { index } from '~/api/classify'
 export default {
   props: {
@@ -51,7 +51,7 @@ export default {
     async asyncData({app,params}){
         try{
         const food = await show(app.$axios,params.id)
-        const classifies = await index(app.$axios)
+        const {data: classifies} = await index(app.$axios)
         return { classifies,food }
         }catch(err){
             return { food:'',classifies:[] }

@@ -1,6 +1,6 @@
 <template>
 <div class="text-black diet-index">
-    <date-pick />
+    <date-pick  @chooseDate="chooseDate"/>
     <el-form :model="form" ref="dinnerForm" label-width="120px" class="demo-ruleForm bg-slate-50 rounded-xl mt-10 px-5 py-5">
         <div class="flex flex-col items-start">Breakfast
             <div>
@@ -20,16 +20,15 @@
                             </i>
                             <template slot-scope="{ item, index }">
                                 <div class="value">{{ item.name }}</div>
-                                <span class="protein">{{ item.protein }}</span>
                             </template>
                     </el-autocomplete>
                     <span class="text-black ml-5"> Serving </span>
-                    <el-input-number class="ml-2 w-36" :min="0.1" v-model="food.serving" />
+                    <el-input-number class="ml-2 w-36" :min="0" v-model="food.serving" />
                     <el-button type="danger" icon="el-icon-minus" @click="deleteBreakfast(index)"></el-button>
                 </el-form-item>
                 <PieChart :series="arrValueBreakfast" />
             </div>
-            <el-button type="success" icon="el-icon-plus" @click="addBreakfast">Add</el-button>
+            <el-button type="success" icon="el-icon-plus" plain @click="addBreakfast">Add</el-button>
         </div>
         <div class="flex flex-col items-start">Lunch
             <el-form-item label="Name" v-for="(food, index) in form.lunch" :key="`lunch${index}`">
@@ -52,11 +51,11 @@
                         </template>
                 </el-autocomplete>
                 <span class="text-black ml-5"> Serving </span>
-                <el-input-number class="ml-2 w-36" :min="0.1" v-model="food.serving" />
+                <el-input-number class="ml-2 w-36" :min="0" v-model="food.serving" />
                 <el-button type="danger" icon="el-icon-minus" @click="deleteLunch(index)"></el-button>
             </el-form-item>
             <PieChart :series="arrValueLunch" />
-            <el-button type="success" icon="el-icon-plus" @click="addLunch">Add</el-button>
+            <el-button type="success" icon="el-icon-plus" plain @click="addLunch">Add</el-button>
         </div>
         <div class="flex flex-col items-start">Dinner
             <el-form-item label="Name" v-for="(food, index) in form.dinner" :key="`dinner${index}`">
@@ -79,11 +78,11 @@
                         </template>
                 </el-autocomplete>
                 <span class="text-black ml-5">Serving</span>
-                <el-input-number class="ml-2 w-36" :min="0.1" v-model="food.serving" />
+                <el-input-number class="ml-2 w-36" :min="0" v-model="food.serving" />
                 <el-button type="danger" icon="el-icon-minus" @click="deleteDinner(index)"></el-button>
             </el-form-item>
             <PieChart :series="arrValueDinner" />
-            <el-button type="success" icon="el-icon-plus" @click="addDinner">Add</el-button>
+            <el-button type="success" icon="el-icon-plus" plain @click="addDinner">Add</el-button>
         </div>
         <div class="flex flex-col items-start">Snacks
             <el-form-item label="Name" v-for="(food, index) in form.snacks" :key="`snacks${index}`">
@@ -106,13 +105,31 @@
                         </template>
                 </el-autocomplete>
                 <span class="text-black ml-5" >Serving</span>
-                <el-input-number class="ml-2 w-36" :min="0.1" v-model="food.serving" />
+                <el-input-number class="ml-2 w-36" :min="0" v-model="food.serving" />
                 <el-button type="danger" icon="el-icon-minus" @click="deleteSnacks(index)"></el-button>
             </el-form-item>
             <PieChart :series="arrValueSnacks" />
-            <el-button type="success" icon="el-icon-plus" @click="addSnacks">Add</el-button>
+            <el-button type="success" icon="el-icon-plus" plain @click="addSnacks">Add</el-button>
         </div>
+            <el-form-item v-if="form.training.name !== undefined" label="Name training session" prop="name training session">
+                <el-input class="w-40" v-model="form.training.name"></el-input>
+            </el-form-item>
+            <el-form-item v-for="(exercise, index) in form.training.exercises" :key="exercise.id" :label="exercise.name" prop="categories_id">
+                <div v-if="exercise.category.id === 2">
+                    <div v-for="exer in exercise.sets">
+                        <el-input-number class="w-40" v-model="exer.weight" placeholder="weight"></el-input-number>
+                        <el-input-number class="w-40" v-model="exer.reps" placeholder="reps"></el-input-number>
+                        <el-input-number class="w-40" v-model="exer.rm"  placeholder="How many rm . is this weight"></el-input-number>
+                    </div>
+                    <br>
+                    <el-button type="success" plain @click="addSet(index)">Add set</el-button>
+                </div>
+                <div v-else>
+                    <el-input-number class="w-40" v-model="exercise.time" placeholder="time"></el-input-number>
+                </div>
+            </el-form-item>
         <div class="flex flex-col items-center">
+        <el-button type="success" @click="dialogTrain = true" plain>Add training session</el-button>
         <div>Total:</div>
         <PieChart :series="totalvalue" />
         </div>
@@ -120,6 +137,22 @@
             <el-button type="primary" class="bg-lime-400 text-center" @click="submit"> Save </el-button>
         </div>
     </el-form>
+    <table-food-dialog
+        :classifies="classifies"  
+        :dialogVisible="dialogVisible"
+        :foods="foods"
+        @emitFood="pushFood"
+        @offDialog="offDialog"     
+    />
+    <table-training-session
+        :training_sessions="training_sessions"
+        :currentPage="currentPage" 
+        :total="total"
+        :pageSize="pageSize"
+        :dialogTrain="dialogTrain"
+        @offDialogTraining="offDialogTraining"
+        @addTraining="addTraining"
+    />
 </div>
 </template>
 <script>
@@ -138,24 +171,42 @@ const snacksForm = [
 import _cloneDeep from 'lodash/cloneDeep';
 import _get from 'lodash/get';
 import _forEach from 'lodash/forEach';
-import { index } from '~/api/meal'
+import { index, store } from '~/api/meal'
+import { index as indexClassify } from '~/api/classify'
+import { index as indexFood } from '~/api/user/food'
+import { index as indexTrainingSession } from '~/api/training_session'
 import DatePick from '~/components/DatePick.vue'
 import PieChart from '~/components/user/PieChart.vue'
+import TableFoodDialog from '~/components/food/TableFoodDialog.vue'
+import TableTrainingSession from '~/components/user/TrainingSession/TableTrainingSession.vue';
 export default {
     components:{
         DatePick,
-        PieChart
+        PieChart,
+        TableFoodDialog,
+        TableTrainingSession
     },
 
     async asyncData({ app, query, params }){
         const { data : meal } = await index(app.$axios , params.user, query)
+        const { data: classifies } = await indexClassify(app.$axios)
+        const {data: foods} = await indexFood(app.$axios)
+        const  training_sessions = await indexTrainingSession(app.$axios)
         const form = {
             breakfast: _get(meal, '[0].breakfast', []),
             lunch: _get(meal, '[0].lunch', []),
             dinner: _get(meal, '[0].dinner', []),
             snacks:  _get(meal, '[0].snacks', []),
+            training: _get(meal, '[0].training', ''),
+            day_use: _get(meal, '[0].day_use', '')
         }
-        return { meal, form }
+        return { 
+            meal, form, classifies, foods, 
+            training_sessions: training_sessions.data,
+            total: training_sessions.meta.total,
+            pageSize: training_sessions.meta.per_page,
+            currentPage: training_sessions.meta.current_page
+            }
     },
     
     data() {
@@ -169,6 +220,10 @@ export default {
            arrValueLunch: [],
            arrValueDinner: [],
            arrValueSnacks: [],
+           dialogVisible: false,
+           mealSelected: 1,
+           dialogTrain: false,
+           breakfastKey: 0
         }
     },
     
@@ -187,6 +242,9 @@ export default {
         'form.breakfast': {
             handler(){
             this.arrValueBreakfast = this.changeArrValue(this.form.breakfast)
+            
+            console.log(this.arrValueBreakfast, this.breakfastKey)
+            
             },
             deep: true
         },
@@ -217,75 +275,82 @@ export default {
     watchQuery: true,
     
     methods:{
-        addBreakfast() {
-            const element = {
-                id: '',
-                name: '',
-                protein: 0,
-                carb: 0,
-                fat: 0,
-                cenluloza: 0,
-                serving: 1
-            }
-            this.form.breakfast.push(element)
+        chooseDate (value) {
+            this.form.day_use = value
+            
         },
 
-        addLunch() {
-            const element = {
-                id: '',
-                name: '',
-                protein: 0,
-                carb: 0,
-                fat: 0,
-                cenluloza: 0,
-                serving: 1
-            }
-            this.form.lunch.push(element)
+        offDialog (value) {
+            this.dialogVisible = value
         },
 
-        addDinner() {
-            const element = {
-                id: '',
-                name: '',
-                protein: 0,
-                carb: 0,
-                fat: 0,
-                cenluloza: 0,
-                serving: 1
-            }
-            this.form.dinner.push(element)
+        offDialogTraining (value) {
+            this.dialogTrain = value
         },
 
-        addSnacks() {
-            const element = {
-                id: '',
-                name: '',
-                protein: 0,
-                carb: 0,
-                fat: 0,
-                cenluloza: 0,
-                serving: 1
-            }
-            this.form.snacks.push(element)
+        addTraining (training) {
+            this.form.training = training
+            this.dialogTrain = false
+            console.log(this.form.training)
+        },
+
+        addBreakfast () {
+            this.mealSelected = 1
+            this.dialogVisible = true
+        },
+
+        addLunch () {
+            this.mealSelected = 2
+            this.dialogVisible = true
+        },
+
+        addDinner () {
+            this.mealSelected = 3
+            this.dialogVisible = true
+        },
+
+        addSnacks () {
+            this.mealSelected = 4
+            this.dialogVisible = true
         },
         
-        deleteBreakfast(index) {
+        pushFood (form, dialog){
+            this.dialogVisible = dialog
+            switch (this.mealSelected) {
+                case 1:
+                    this.form.breakfast.push(...form)
+                    break;
+                case 2:
+                    this.form.lunch.push(...form)
+                    break;
+                case 3:
+                    this.form.dinner.push(...form)
+                    break;
+                case 4:
+                    this.form.snacks,push(...form)
+                    break;
+                default:
+                    break;
+            }
+        },
+
+        deleteBreakfast (index) {
             this.form.breakfast.splice(index, 1)
         },
 
-        deleteLunch(index) {
+        deleteLunch (index) {
             this.form.lunch.splice(index, 1)
         },
 
-        deleteDinner(index) {
+        deleteDinner (index) {
             this.form.dinner.splice(index, 1)
         },
 
-        deleteSnacks(index) {
+        deleteSnacks (index) {
             this.form.snacks.splice(index, 1)
         },
 
-        handleSelectBreakfastFoods(item) {
+        handleSelectBreakfastFoods (item) {
             this.form.breakfast.map( (value) => {
                 if(value.name === item.name){
                     value.id = item.id
@@ -304,7 +369,7 @@ export default {
             })
             
         },
-        handleSelectLunchFoods(item) {
+        handleSelectLunchFoods (item) {
             this.form.lunch.map( (value) => {
                 if(value.name === item.name){
                     value.id = item.id
@@ -323,7 +388,7 @@ export default {
             })
             
         },
-        handleSelectDinnerFoods(item) {
+        handleSelectDinnerFoods (item) {
             this.form.dinner.map( (value) => {
                 if(value.name === item.name){
                     value.id = item.id
@@ -343,7 +408,7 @@ export default {
             
         },
 
-        handleSelectSnacksFoods(item) {
+        handleSelectSnacksFoods (item) {
             this.form.snacks.map( (value) => {
                 if(value.name === item.name){
                     value.id = item.id
@@ -363,26 +428,26 @@ export default {
             
         },
 
-        querySearch(queryString, cb) {
+        querySearch (queryString, cb) {
             let links = this.foodList;
             let results = queryString ? links.filter(this.createFilter(queryString)) : links;
             // call callback function to return suggestion objects
             cb(results);
         },
 
-        createFilter(queryString) {
+        createFilter (queryString) {
             return (link) => {
             return (link.name.toLowerCase().indexOf(queryString.toLowerCase()) >= 0);
             };
         },
 
-         getStoreLocal() {
+         getStoreLocal () {
             if(process.client) {
                 this.foodList = JSON.parse(localStorage.foods)
             }
         },
 
-        changeArrValue(form) {
+        changeArrValue (form) {
             const arr = []
             let protein = 0
             let lipit = 0
@@ -398,15 +463,25 @@ export default {
             return arr
         },
 
-        submit() {
-
+        async submit() {
+            if(this.form.day_use === '')
+            this.form.day_use = this.$router.query.day_use
+            await store(this.$axios, this.form)
         },
+
+        reloadPage () {
+
+        }
 
     },
 
-    mounted() {
+    mounted () {
         this.getStoreLocal()
-       
+        // this.changeArrValue(this.form.breakfast)
+        // this.changeArrValue(this.form.lunch)
+        // this.changeArrValue(this.form.dinner)
+        // this.changeArrValue(this.form.snacks)
+         
     },
 
     created() {
@@ -416,18 +491,11 @@ export default {
         this.arrValueLunch = this.changeArrValue(this.form.lunch)
         this.arrValueDinner = this.changeArrValue(this.form.dinner)
         this.arrValueSnacks = this.changeArrValue(this.form.snacks)
-   
     }
 }
 </script>
 <style lang="scss">
     .diet-index {
-        .el-button--success {
-            color: #0bef0b;
-            border: none;
-            background-color: transparent;
-            font-size: large;
-        }
         .el-button--danger {
             color: #ef1a0b;
             border: none;

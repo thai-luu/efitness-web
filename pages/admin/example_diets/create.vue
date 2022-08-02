@@ -1,5 +1,5 @@
 <template>
-<el-form ref="form" v-model="form" label-width="120px">
+<el-form class="createDiet" ref="form" v-model="form" label-width="120px">
   <el-form-item label="Tên">
     <el-input type="text" v-model="form.name"></el-input>
   </el-form-item>
@@ -33,6 +33,11 @@
       <template slot="append">%</template>
     </el-input>
   </el-form-item>
+  <el-form-item label="Range">
+    <el-input type="number" v-model="form.range">
+      <template slot="append">%</template>
+    </el-input>
+  </el-form-item>
   <el-form-item>
     <el-button @click="onSubmit">Create</el-button>
     <el-button>Cancel</el-button>
@@ -58,6 +63,7 @@ export default {
           cenluloza:'',
           mode_id:'',
           target_id:'',
+          range: '',
         }
       }
     },
@@ -73,22 +79,23 @@ export default {
             }
         }
     },
-    async created(){
-      const modes = await modeLists(this.$axios)
-      const targets = await index(this.$axios)
-      
-    },
+    
     methods:{
         async onSubmit(){
           try{
-            
-          await create(this.$axios,this.form)
-          
-        }
-      catch(err){
-        this.$notify.error('Some thing went wrong')
-      }
+            await create(this.$axios,this.form)
+            console.log(123)
+          } catch(e) {
+            this.$notify.error(e.response.data.message)
+          }
     }
     }
 }
 </script>
+<style lang="scss">
+.createDiet{
+  .el-form-item__content {
+    width: 200px;
+  }
+}
+</style>

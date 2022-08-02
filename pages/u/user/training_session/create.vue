@@ -8,7 +8,8 @@
                 <div v-if="exercise.category.id === 2">
                     <div v-for="exer in exercise.sets">
                         <el-input-number class="w-40" v-model="exer.weight" placeholder="weight"></el-input-number>
-                        <el-input-number class="w-40" v-model="exer.reps" :max="exer.repFailure" placeholder="reps"></el-input-number>          
+                        <el-input-number class="w-40" v-model="exer.reps" placeholder="reps"></el-input-number>
+                        <el-input-number class="w-40" v-model="exer.rm"  placeholder="How many rm . is this weight"></el-input-number>
                     </div>
                     <br>
                     <el-button type="success" plain @click="addSet(index)">Add set</el-button>
@@ -31,9 +32,6 @@
             :muscles="muscles" 
             :categories="categories" 
             :dialogVisible="dialogVisible"
-            :total="total"
-            :pageSize="pageSize"
-            :currentPage="currentPage"
             @emitExercise="pushExercise"
             @offDialog="offDialog" />
     </div>
@@ -46,6 +44,7 @@ import TableExercise from '~/components/shared/TableExercise.vue'
 import ExerciseFilter from '~/components/user/ExerciseFilter.vue'
 import { index } from '~/api/exercise'
 import { exerciseCategory, allMuscles } from '~/api/static'
+import { index as indexTrainingSession, store } from '~/api/user/training_session'
 export default {
     components: { TableExercise, ExerciseFilter },
 
@@ -53,12 +52,11 @@ export default {
         const  {data: exercises} = await index(app.$axios, query)
         const {data: categories} = await exerciseCategory(app.$axios, query)
         const {data: muscles} = await allMuscles(app.$axios, query)
+        const {data: training_sessions} = await indexTrainingSession(app.$axios)
         return { 
             exercises: exercises.data || [] , 
             categories, muscles,
-            total: exercises.meta.total,
-            pageSize: exercises.meta.per_page,
-            currentPage: exercises.meta.current_page,
+            training_sessions
             }
     },
 
@@ -117,8 +115,12 @@ export default {
             this.dialogVisible = value
         },
 
-        submitForm () {
-            console.log(this.training_session)
+        async submitForm () {
+            const form = {
+                name: this.training_session.name,
+                exercises: this.training_session.exercises
+            }
+            await store(this.$axios, form)
         },
 
         consoleChange () {

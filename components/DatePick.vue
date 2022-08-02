@@ -61,7 +61,7 @@ export default {
                     }
                 }]
         },
-            value: today(date),
+            value: this.$route.query.day_use,
         }
     },
 
@@ -72,24 +72,16 @@ export default {
                     ['day_use']: this.value,
                 }),
             })
+            this.$emit('chooseDate', this.value)
         },
 
-        clear() {
-            this.$router.push({
-                query: '',
-            })
-        }
+        // clear() {
+        //     this.$router.push({
+        //         query: '',
+        //     })
+        // }
     },
 
-    created() {
-        if(Object.getOwnPropertyNames(this.$route.query).length === 0){
-            this.$router.push({
-            query: _assign({}, this.$route.query, {
-                    ['day_use']: this.value,
-                }),
-            })
-        }
-        
-    }
+    
 }
 </script>

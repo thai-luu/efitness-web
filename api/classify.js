@@ -1,1 +1,1 @@
-export const index = (axios) => axios.get('/admin/classify').then(_ => _.data)
+export const index = (axios) => axios.get('/api/classify').then(_ => _.data)

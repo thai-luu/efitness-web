@@ -1,6 +1,6 @@
 export const indexTargets = (axios) => axios.get('/api/target').then(_ => _.data)
 export const indexLevels = (axios) => axios.get('/api/level').then(_ => _.data)
 export const modeLists = (axios) => axios.get('/api/mode').then(_ => _.data)
-export const foodList = (axios) => axios.get('/api/food').then(_ => _.data)
+export const foodList = (axios) => axios.get('/api/beforeLogin/food').then(_ => _.data)
 export const exerciseCategory = (axios) => axios.get('/api/exercise-category').then(_ => _.data)
 export const allMuscles = (axios) => axios.get('/api/muscles').then(_ => _.data)

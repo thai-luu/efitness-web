@@ -1,0 +1,1 @@
+export const index = (axios) => axios.get('/api/food').then(_ => _.data)

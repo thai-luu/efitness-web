@@ -89,7 +89,7 @@
 </div>
 </template>
 <script>
-import { index } from '~/api/food';
+import { index } from '~/api/admin/food';
 import { mapState } from 'vuex';
 import Pagination from '~/components/shared/Pagination.vue'
 

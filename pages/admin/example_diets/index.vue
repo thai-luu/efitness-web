@@ -78,7 +78,7 @@ export default {
     async asyncData({app}){
         try{
             const diets =  await index(app.$axios)
-            return  { diets }
+            return  { diets: diets }
         }catch (err){
           return {diets:[] }
         }
@@ -92,6 +92,10 @@ export default {
       add(){
         this.$router.push({path:`/admin/example_diets/create`})
       }
+    },
+
+    created () {
+      console.log(this.diets)
     }
 
 }

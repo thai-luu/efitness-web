@@ -1,5 +1,5 @@
 <template>
-<el-form ref="form" v-model="diet" label-width="120px">
+<el-form class="editDiet" ref="form" v-model="diet" label-width="120px">
   <el-form-item label="Tên">
     <el-input type="text" v-model="diet.name"></el-input>
   </el-form-item>
@@ -14,16 +14,24 @@
     </el-select>
   </el-form-item>
   <el-form-item label="Protein">
-    <el-input type="number" v-model="diet.protein">%</el-input>
+    <el-input type="number" v-model="diet.protein">
+      <template slot="append">%</template>
+    </el-input>
   </el-form-item>
   <el-form-item label="Carb">
-    <el-input type="number" v-model="diet.carb">%</el-input>
+    <el-input type="number" v-model="diet.carb">
+      <template slot="append">%</template>
+    </el-input>
   </el-form-item>
   <el-form-item label="Fat">
-    <el-input type="number" v-model="diet.fat">%</el-input>
+    <el-input type="number" v-model="diet.fat">
+      <template slot="append">%</template>
+    </el-input>
   </el-form-item>
   <el-form-item label="Cenluloza">
-    <el-input type="number" v-model="diet.cenluloza">%</el-input>
+    <el-input type="number" v-model="diet.cenluloza">
+      <template slot="append">%</template>
+    </el-input>
   </el-form-item>
   <el-form-item>
     <el-button @click="onSubmit">Update</el-button>
@@ -41,7 +49,7 @@ export default {
     layout:'admin',
     async asyncData({app,params}){
         try{
-        const diet = await show(app.$axios)
+        const diet = await show(app.$axios,params.id)
         const modes = await modeLists(app.$axios,params.id)
         const targets = await indexTargets(app.$axios,params.id)
         return { diet:diet, modes:modes,targets:targets }
@@ -62,3 +70,10 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+.editDiet{
+  .el-form-item__content {
+    width: 200px;
+  }
+}
+</style>
