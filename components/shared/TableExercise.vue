@@ -6,7 +6,7 @@
         >
         <!-- <exercise-filter :categories="categories" :muscles="muscles" @search="search" /> -->
             <div>
-            <el-input type="text" class="w-40" v-model="search" placeholder="Name"></el-input>
+            <SearchExercise />
             </div>
             <el-table
                 :data="exercises.filter(exercises => !search || exercises.name.toLowerCase().includes(search.toLowerCase()))"
@@ -24,7 +24,7 @@
                     width="180"
                 >
                     <template slot-scope="scope">
-                        <span>{{scope.row.level.name_vi}}</span>
+                        <span v-if="scope.row.level">{{scope.row.level.name_vi}}</span>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -74,6 +74,7 @@ import _forEach from 'lodash/forEach';
 import _cloneDeep from 'lodash/cloneDeep';
 import _mapKeys from 'lodash/mapKeys'
 import _findIndex from 'lodash/findIndex'
+import SearchExercise from '~/components/shared/exercise/SearchExercise.vue';
 export default {
   props: {
     exercises: Array,
@@ -83,7 +84,8 @@ export default {
   },
   
   components: {
-    Pagination
+    Pagination,
+    SearchExercise
   },
 
   data () {
@@ -167,6 +169,7 @@ export default {
     this.musclesGroup = muscles
     this.categoryList = categories
     this.dialog = this.dialogVisible
+    console.log(this.exercises)
   },
 
 

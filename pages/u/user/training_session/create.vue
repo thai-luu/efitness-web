@@ -4,24 +4,35 @@
             <el-form-item label="Name" prop="name">
                 <el-input class="w-40" v-model="training_session.name"></el-input>
             </el-form-item>
+            <el-form-item label="Exercise:" prop="Exercise">
+            </el-form-item>
             <el-form-item v-for="(exercise, index) in training_session.exercises" :key="exercise.id" :label="exercise.name" prop="categories_id">
-                <div v-if="exercise.category.id === 2">
+                <div class="text-black" v-if="exercise.category.id === 2">
                     <div v-for="exer in exercise.sets">
+                        <span>Weight</span>
                         <el-input-number class="w-40" v-model="exer.weight" placeholder="weight"></el-input-number>
+                        <span>Reps</span>
                         <el-input-number class="w-40" v-model="exer.reps" placeholder="reps"></el-input-number>
+                        <span>Rm</span>
                         <el-input-number class="w-40" v-model="exer.rm"  placeholder="How many rm . is this weight"></el-input-number>
+                        <el-button type="danger" plain icon="el-icon-minus" @click="deleteExercise(index)"></el-button>
                     </div>
                     <br>
                     <el-button type="success" plain @click="addSet(index)">Add set</el-button>
                 </div>
-                <div v-else>
+                <div class="text-black" v-else>
+                    <span>Time</span>
                     <el-input-number class="w-40" v-model="exercise.time" placeholder="time"></el-input-number>
                 </div>
             </el-form-item>
+            <div class="text-center ">
             <el-button type="success" plain @click="dialogVisible = true">Add Exercise</el-button>
+            </div>
+            <div class="text-center">
             <span class="text-black">
-            {{training_session.totalTime}},{{training_session.calories}}
+                Time: {{training_session.totalTime}}, Calo: {{training_session.calories}}
             </span>
+            </div>
             <el-form-item>
                 <el-button type="primary" plain @click="submitForm">Submit</el-button>
                 <el-button @click="resetForm">Reset</el-button>
@@ -44,7 +55,8 @@ import TableExercise from '~/components/shared/TableExercise.vue'
 import ExerciseFilter from '~/components/user/ExerciseFilter.vue'
 import { index } from '~/api/exercise'
 import { exerciseCategory, allMuscles } from '~/api/static'
-import { index as indexTrainingSession, store } from '~/api/user/training_session'
+import { store } from '~/api/user/training_session'
+
 export default {
     components: { TableExercise, ExerciseFilter },
 
@@ -52,12 +64,24 @@ export default {
         const  {data: exercises} = await index(app.$axios, query)
         const {data: categories} = await exerciseCategory(app.$axios, query)
         const {data: muscles} = await allMuscles(app.$axios, query)
-        const {data: training_sessions} = await indexTrainingSession(app.$axios)
         return { 
             exercises: exercises.data || [] , 
             categories, muscles,
-            training_sessions
             }
+    },
+
+    data () {
+
+        return {
+            training_session:{
+                name: '',
+                exercises: [],
+                volume: 0,
+                totalTime: 0,
+                calories: 0
+            },
+            dialogVisible: false,
+        }
     },
 
     watch: {
@@ -81,6 +105,10 @@ export default {
             // } catch (e) {
                 
             // }
+        },
+
+        deleteExercise(index) {
+            this.training_session.exercises.splice(index, 1)
         },
 
         pushExercise (exercises, dialog) {
@@ -120,7 +148,14 @@ export default {
                 name: this.training_session.name,
                 exercises: this.training_session.exercises
             }
-            await store(this.$axios, form)
+            // try {
+                await store(this.$axios, form)
+                this.$message.success('Created training session successfully')
+                console.log(this.$route)
+                this.$router.push(`/u/${this.$route.params.user}/training_session`)
+            // } catch (error) {
+            //     this.$message.error('Some thing went wrong')
+            // }
         },
 
         consoleChange () {
@@ -130,27 +165,10 @@ export default {
 
         }
     },
-
-    data () {
-
-        return {
-            training_session:{
-                name: '',
-                exercises: [
-                    
-                ],
-                volume: 0,
-                totalTime: 0,
-                calories: 0
-
-            },
-            dialogVisible: false,
-            
-        }
-    },
     
     created () {
         console.log(this.exercises)
+        console.log(this.$route)
         if(Object.values(this.$route.query).length !== 0)
         {
             this.dialogVisible = true

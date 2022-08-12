@@ -1,1 +1,5 @@
 export const store = (axios, data) => axios.post('/admin/lesson', data)
+export const showLesson = (axios, id) => axios.get(`/admin/lesson/${id}`).then(_=>_.data)
+export const editLesson = (axios, id, data) => axios.put(`/admin/lesson/${id}`,data).then(_=>_.data)
+export const deleteLesson = (axios, id) => axios.delete(`/admin/lesson/${id}`)
+export const indexLesson = (axios) => axios.get('/admin/lesson').then(_=>_.data)

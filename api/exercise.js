@@ -2,5 +2,5 @@ export const getExercises = (axios) => axios.get('/admin/exercise').then(_ => _.
 export const createExercise = (axios,data) => axios.post('admin/exercise',data)
 export const getLevels = (axios,data) => axios.get('/admin/level',data).then(_ => _.data)
 export const index = (axios, params) => axios.get('/api/exercise', { params })
-export const getSystemExerciseByMuscle = (axios) => axios.get('/api/exercise/get-system-exercise-by-muscle').then(_ => _.data)
+export const getSystemExerciseByMuscle = (axios) => axios.get('/api/exercise/system/get-system-exercise-by-muscle').then(_ => _.data)
 export const show = (axios, id) => axios.get(`/api/exercise/${id}`).then(_ => _.data)

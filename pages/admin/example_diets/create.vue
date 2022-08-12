@@ -4,14 +4,19 @@
     <el-input type="text" v-model="form.name"></el-input>
   </el-form-item>
   <el-form-item label="Dành cho">
-    <el-select v-model="form.mode_id" placeholder="please select your zone">
-      <el-option v-for="(mode,index) in modes" :key="mode.id" :label="mode.name" :value="mode.id">{{mode.name}}</el-option>
-    </el-select>
-  </el-form-item>
-  <el-form-item label="Mục tiêu">
-    <el-select v-model="form.target_id" placeholder="please select your zone">
-      <el-option v-for="(target,index) in targets" :key="target.id" :label="target.name" :value="target.id">{{target.name}}</el-option>
-    </el-select>
+      <div v-for="(mode_target, index) in form.mode_target" key="index" class="mode_target" >
+          <span class="w-24">Tạng người: </span>
+          <el-select v-model="mode_target.mode" placeholder="Chọn tạng người">
+            <el-option v-for="(mode,index) in modes" :key="mode.id" :label="mode.name" :value="mode.id">{{mode.name}}</el-option>
+          </el-select>
+          <span class="w-24">Mục tiêu: </span>
+          <el-select v-model="mode_target.target" placeholder="Chọn mục tiêu">
+            <el-option v-for="(target,index) in targets" :key="target.id" :label="target.name" :value="target.id">{{target.name}}</el-option>
+          </el-select>
+          <el-button type="danger" plain class="ml-1" @click="deleteModeTarget(index)"><i class="el-icon-minus"></i></el-button>
+      </div>
+      <br>
+    <el-button class="text-center" type="success" @click="addModeTarget" plain>Add mode and target</el-button>
   </el-form-item>
   <el-form-item label="Protein">
     <el-input type="number" v-model="form.protein">
@@ -61,8 +66,7 @@ export default {
           calories:'',
           protein:'',
           cenluloza:'',
-          mode_id:'',
-          target_id:'',
+          mode_target:[],
           range: '',
         }
       }
@@ -88,7 +92,20 @@ export default {
           } catch(e) {
             this.$notify.error(e.response.data.message)
           }
-    }
+    },
+
+      addModeTarget () {
+        const push = {
+          mode: '',
+          target: ''
+        }
+        this.form.mode_target.push(push)
+      },
+
+      deleteModeTarget (index) {
+        this.form.mode_target.splice(index, 1)
+      }
+
     }
 }
 </script>
@@ -97,5 +114,9 @@ export default {
   .el-form-item__content {
     width: 200px;
   }
+.mode_target{
+  width: 600px;
+  display: flex;
+}
 }
 </style>

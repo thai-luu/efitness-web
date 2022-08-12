@@ -1,17 +1,20 @@
 <template>
     <div>
         <el-carousel :interval="4000" type="card" height="200px">
-            <el-carousel-item v-for="exercise in exercises" :key="exercise.id">
+            <el-carousel-item v-for="trainingSession in trainingSessions" :key="trainingSession.id">
             <el-card :body-style="{ padding: '0px'}">
                 <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
                 <div style="padding: 14px;">
-                    <span>{{exercise.name}}</span>
+                    <span>{{trainingSession.name}}</span>
                     <div class="bottom clearfix">
-                        <div class="time">Calories/min: {{ exercise.calories }}</div>
-                        <div class="time" v-if="exercise.compound === true">Category: compound</div>
-                        <div class="time" v-else>Category: transition</div>
-                        <div class="time" v-if="exercise.level !== null">Level: {{ exercise.level.name_vi }}</div>
-                        <el-button type="text" class="button" @click="view(exercise.id)">Xem chi tiết</el-button>
+                        <div class="time">Mô tả: {{ trainingSession.desc }}</div>
+                            <span class="time">Danh sách bài tập:</span>
+                            <div class="grid grid-cols-3 gap-1">
+                                <span v-for="exercise in trainingSession.exercises">
+                                    <el-tag type="success">{{exercise.name}}</el-tag>
+                                </span>
+                            </div>
+                        <el-button type="text" class="button" @click="view(trainingSession.id)">Xem chi tiết</el-button>
                     </div>
                 </div>
                 </el-card>
@@ -22,7 +25,7 @@
 <script>
 export default {
     props :{
-        exercises: Array
+        trainingSessions: Array
     },
 
     methods: {

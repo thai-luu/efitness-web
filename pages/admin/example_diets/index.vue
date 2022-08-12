@@ -40,30 +40,36 @@
         width="120">
       </el-table-column>
       <el-table-column
-        label="Mode"
+        prop="trans"
+        label="trans"
         width="120">
-        <template slot-scope="{row}">
-          <p>{{row.mode.name}}</p>
-        </template>
       </el-table-column>
       <el-table-column
-        label="Target"
+        prop="range"
+        label="range"
         width="120">
-        <template slot-scope="{row}">
-          <p>{{row.target.name}}</p>
+      </el-table-column>
+      <el-table-column
+        label="Mode"
+        width="120">
+        <template slot-scope="scope">
+          <div v-for="modeTarget in scope.row.mode_target">
+            {{modeTarget.mode.name}} - {{modeTarget.target.name}}
+          </div>
         </template>
       </el-table-column>
       <el-table-column
         fixed="right"
         label="Operations"
         width="120">
-        <template slot-scope="{row}">
-          <el-button @click="onEdit(row.id)" type="text" size="small">Detail</el-button>
-          <el-button type="text" size="small">Edit</el-button>
+        <template slot-scope="scope">
+          <el-button @click="onEdit(scope.row.id)" type="text" size="small">Edit</el-button>
+          <el-button type="text" @click="deleteDiet(scope.row.id)" size="small">Delete</el-button>
         </template>
       </el-table-column>
     </el-table>
   </div>
+  <pagination v-bind="{ currentPage, total, pageSize }" />
   <!-- <a href="/admin/training_session/create"> -->
   <el-button type="success" plain @click="add()">
     Create
@@ -72,13 +78,24 @@
 </div>
 </template>
 <script>
+import Pagination from '~/components/shared/Pagination.vue'
 import { index } from '~/api/diet';
+import { deleteDiet } from '~/api/admin/diet';
 export default {
     layout: 'admin',
-    async asyncData({app}){
+    components: {
+      Pagination
+    },
+
+    async asyncData({app, query}){
         try{
-            const diets =  await index(app.$axios)
-            return  { diets: diets }
+            const diets =  await index(app.$axios, query)
+            return  { 
+              diets: diets.data,
+              total: diets.meta.total,
+              pageSize: diets.meta.per_page,
+              currentPage: diets.meta.current_page,
+              }
         }catch (err){
           return {diets:[] }
         }
@@ -86,11 +103,28 @@ export default {
     },
 
     methods:{
-       onEdit(id) {
+      onEdit(id) {
         this.$router.push({path:`/admin/example_diets/${id}/edit`})
-            },
+      },
+
       add(){
         this.$router.push({path:`/admin/example_diets/create`})
+      },
+
+      async fetchDiet(){
+        const diets =  await index(this.$axios, this.$route.query)
+        this.diets = diets.data
+      },
+
+      async deleteDiet (id) {
+        try {
+          await deleteDiet(this.$axios, id)
+          this.fetchDiet()
+          this.$message.success('Delete successfully')
+        } catch (error) {
+          this.$message.error('Some thing went wrong')
+        }
+        
       }
     },
 

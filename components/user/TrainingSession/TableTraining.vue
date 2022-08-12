@@ -1,9 +1,6 @@
 <template>
-    <el-dialog
-        title="Training Sesion"
-        :visible.sync="dialog"
-        @close="offDialog"
-    >
+    <div>
+        <search-training />
         <div class="flex flex-wrap">  
             <el-table
             :data="training_sessions"
@@ -40,14 +37,16 @@
             <el-button @click="offDialog">Cancel</el-button>
             <el-button type="success" plain @click="emitTrainingSession">Confirm</el-button>
         </span>
-</el-dialog>
+    </div>
 </template>
 <script>
-import Pagination from '~/components/shared/Pagination.vue'
+import SearchTraining from '~/components/shared/training_session/SearchTraining.vue';
 import _cloneDeep from 'lodash/cloneDeep';
+import Pagination from '~/components/shared/Pagination.vue'
 export default {
     components: {
-        Pagination
+        Pagination,
+        SearchTraining
     },
 
     props: {
@@ -55,35 +54,24 @@ export default {
         total: Number,
         pageSize: Number,
         training_sessions: Array,
-        dialogTrain: Boolean
     },
 
     data () {
         return {
             trainingSelected: null,
-            dialog: false
-        }
-    },
-
-    watch: {
-        dialogTrain () {
-            this.dialog = this.dialogTrain
         }
     },
 
     methods: {
-        offDialog () {
-            this.$emit('offDialogTraining', false)
-        },
-
-        emitTrainingSession () {
-            this.$emit('addTraining', this.trainingSelected)
-        },
 
         handleCurrentChange(val) {
             this.trainingSelected = val;
         },
-        
+
+        emitTrainingSession () {
+            this.$emit('emitTraining', this.trainingSelected)
+        },
+    
     }
 }
 </script>

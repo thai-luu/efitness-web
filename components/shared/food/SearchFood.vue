@@ -1,22 +1,31 @@
 <template>
-    <el-form class ="searchFood" v-model="search">
+    <el-form class ="searchFood" v-model="searchFoodVal">
+        <el-form-item label="Name" size="small">
+            <el-input v-model="searchFoodVal.name">
+            </el-input>
+        </el-form-item>
         <el-form-item label="Classify">
-            <el-select v-model="search.classify">
+            <el-select v-model="searchFoodVal.classify">
                 <el-option v-for="option in optionsClassify" :key="option.value" :label="option.label" :value="option.value" />
             </el-select>
         </el-form-item>
         <el-form-item label="Protein">
-            <el-select v-model="search.protein">
+            <el-select v-model="searchFoodVal.protein">
                 <el-option v-for="option in optionsProtein" :key="option.value" :label="option.label" :value="option.value" />
             </el-select>
         </el-form-item>
         <el-form-item label="Carb">
-            <el-select v-model="search.carb">
+            <el-select v-model="searchFoodVal.carb">
                 <el-option v-for="option in optionsCarb" :key="option.value" :label="option.label" :value="option.value" />
             </el-select>
         </el-form-item>
-        <el-form-item label="Carb">
-            <el-select v-model="search.fat">
+        <el-form-item label="Cenluloza">
+            <el-select v-model="searchFoodVal.cenluloza">
+                <el-option v-for="option in optionsFat" :key="option.value" :label="option.label" :value="option.value" />
+            </el-select>
+        </el-form-item>
+        <el-form-item label="Fat">
+            <el-select v-model="searchFoodVal.fat">
                 <el-option v-for="option in optionsFat" :key="option.value" :label="option.label" :value="option.value" />
             </el-select>
         </el-form-item>
@@ -27,14 +36,20 @@
 </template>
 <script>
 import _assign from 'lodash/assign'
+import _cloneDeep from 'lodash/cloneDeep';
 export default {
+    props: {
+        search: Object
+    },
+
     data () {
         return {
-            search: {
+            searchFoodVal: {
                 classify:'',
                 protein:'',
                 carb:'',
-                fat: ''
+                fat: '',
+                name:'',
             },
             optionsClassify:[
                 {
@@ -82,7 +97,7 @@ export default {
                     value: 3
                 },
                 {
-                    label:'61 gram -80 gram',
+                    label:'61 gram - 80 gram',
                     value: 4
                 },
                 {
@@ -107,15 +122,19 @@ export default {
 
         }
     },
+    mounted () {
+        if(this.search)
+        this.searchFoodVal = _cloneDeep(this.search)
+    },
 
     methods: {
         searchFood () {
             this.$router.push({
                 query: _assign({}, this.$route.query, {
-                    ['classify']: this.search.classify,
-                    ['protein']: this.search.protein,
-                    ['carb']: this.search.carb,
-                    ['fat']: this.search.fat,
+                    ['classify']: this.searchFoodVal.classify,
+                    ['protein']: this.searchFoodVal.protein,
+                    ['carb']: this.searchFoodVal.carb,
+                    ['fat']: this.searchFoodVal.fat,
 
                 }),
             })
@@ -126,6 +145,7 @@ export default {
 <style lang="scss">
     .searchFood{
         display: flex;
+        flex-wrap: wrap;
         .el-form-item {
             display: flex;
             margin-left: 5px;

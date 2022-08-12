@@ -3,10 +3,11 @@
         title="Tips"
         :visible.sync="dialog"
         width="70%"
+        :before-close="handleClose"
         >
         <!-- <exercise-filter :categories="categories" :muscles="muscles" @search="search" /> -->
             <div>
-            <el-input type="text" class="w-40" v-model="search" placeholder="Name"></el-input>
+            <SearchFood />
             </div>
             <el-table
                 :data="foods.filter(foods => !search || foods.name.toLowerCase().includes(search.toLowerCase()))"
@@ -94,9 +95,13 @@
 import _cloneDeep from 'lodash/cloneDeep';
 import _mapKeys from 'lodash/mapKeys';
 import _forEach from 'lodash/forEach';
+import SearchFood from '~/components/shared/food/SearchFood.vue';
 export default {
 
-
+    components: {
+        SearchFood
+    },
+    
     props: {
         classifies: Array,
         dialogVisible: Boolean,
@@ -121,6 +126,10 @@ export default {
 
         filterClassifies(value, row) {
             return row.classify.id === value
+        },
+
+        handleClose () {
+            this.dialogFalse()
         },
 
         dialogFalse () {

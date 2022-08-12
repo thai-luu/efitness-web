@@ -12,6 +12,21 @@
                     <el-option v-for="(category, index) in categories" :key="index" :label="category.name" :value="category.id"></el-option>
                 </el-select>
             </el-form-item>
+            <el-form-item  label="Muscle" prop="muscle">
+                <el-select
+                    v-model="exercise.muscle"
+                    multiple
+                    filterable
+                    default-first-option
+                    placeholder="Chọn các nhóm cơ">
+                        <el-option
+                            v-for="item in muscleList"
+                            :key="item.value"
+                            :label="item.label"
+                            :value="item.value">
+                        </el-option>
+                </el-select>
+                </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="submitForm">Submit</el-button>
                 <el-button @click="resetForm">Reset</el-button>
@@ -21,6 +36,8 @@
 </template>
 <script>
 import { exerciseCategory } from '~/api/static' 
+import _mapKeys from 'lodash/mapKeys'
+import _cloneDeep from 'lodash/cloneDeep';
 export default {
     async asyncData({app}) {
         const {data: categoriesList} = await exerciseCategory(app.$axios)
@@ -39,17 +56,45 @@ export default {
             excercise: {
                 name: '',
                 movement: '',
-                categories_id: ''
-            }
+                categories_id: '',
+                muscles:[]
+            },
+            muscles: []
         }
     },
     computed: {
         disabledMovement() {
             return this.excercise.categories_id === 1
+        },
+
+        muscleList () {
+            return this.convertMuscle(this.muscles)
         }
     },
 
     methods: {
+        getStoreLocal () {
+            if(process.client) {
+            this.muscles = JSON.parse(localStorage.muscles)
+        }
+        },
+        convertMuscle (muscles) {
+            const muscleList = muscles.map((value) => {
+            value =  _mapKeys(value , (val, key) => {
+                    if(key === 'id'){
+                    return 'value'
+                    }
+                    if(key === 'name'){
+                    return 'label'
+                    }
+                    
+                })
+                delete value.undefined
+                return value
+            })
+            
+            return muscleList
+        },
         resetForm() {
             this.$refs.formExercise.resetFields();
       },

@@ -1,13 +1,13 @@
 <template>
     <div class="text-black exercise">
-        <div>System excercise</div>
-        <br>
-        <div>My exercise</div>
+        <div class="text-xl text-transform: uppercase font-bold">My exercise</div>
+        <table-exercise-user :exercises="exercises" :total="total" :pageSize="pageSize" :currentPage="currentPage" @fetchExercise="fetchExercise" @onDialog="openDialogEdit"/>
         <br>
         <el-button type="success" plain @click="openDialog">Create exercise</el-button>
         <el-dialog
-            title="Tips"
+            :title="title"
             :visible.sync="dialogVisible"
+            :before-close="handleClose"
             width="50%"
             min-width="300px"
             >
@@ -15,13 +15,10 @@
                 <el-form-item label="Name" prop="name">
                     <el-input class="w-40" v-model="exercise.name"></el-input>
                 </el-form-item>
-                <el-form-item class="categories_exercise" label="Category" prop="categories_id">
-                    <el-select v-model="exercise.categories_id" placeholder="Category of exercise">
+                <el-form-item class="categories_exercise" label="Category" prop="category">
+                    <el-select v-model="exercise.category" placeholder="Category of exercise">
                         <el-option class="w-40" v-for="(category, index) in categories" :key="index" :label="category.name" :value="category.id"></el-option>
                     </el-select>
-                </el-form-item>
-                <el-form-item label="Calories/min" prop="calories">
-                    <el-input-number class="w-40" v-model="exercise.calories"></el-input-number>
                 </el-form-item>
                 <el-form-item  label="Compound" prop="compound">
                     <el-checkbox v-model="exercise.compound">Option</el-checkbox>
@@ -29,47 +26,88 @@
                 <el-form-item v-if="disabledMovement" label="Rep to failure" prop="failure">
                     <el-input-number class="w-40" :min="1" v-model="exercise.failure"></el-input-number>
                 </el-form-item>
+                <el-form-item  label="Muscle" prop="muscle">
+                    <el-select
+                        v-model="exercise.muscle"
+                        multiple
+                        filterable
+                        default-first-option
+                        placeholder="Chọn các nhóm cơ">
+                            <el-option
+                                v-for="item in muscleList"
+                                :key="item.value"
+                                :label="item.label"
+                                :value="item.value">
+                            </el-option>
+                    </el-select>
+                </el-form-item>
+                <div class="text-center">
+                    <span>Calories tiêu hao:</span>
+                    <span class="font-bold">{{exercise.calories}}</span>
+                </div>
                 <el-form-item>
-                    <el-button type="success" plain @click="submitForm">Submit</el-button>
-                    <el-button @click="resetForm">Reset</el-button>
+                    <el-button v-if="this.title === 'Create exercise'" type="success" plain @click="submitForm">Submit</el-button>
+                    <el-button v-else type="success" plain @click="editExercise">Update</el-button>
+                    <el-button @click="offDialog">Cancel</el-button>
                 </el-form-item>
         </el-form>
         </el-dialog>
     </div>
 </template>
 <script>
-import { exerciseCategory } from '~/api/static' 
+import TableExerciseUser from '~/components/exercise/TableExerciseUser.vue'
+import _mapKeys from 'lodash/mapKeys'
+import _cloneDeep from 'lodash/cloneDeep';
+import { exerciseCategory, allMuscles } from '~/api/static'
+import { createExercise } from '~/api/user/exercise'
+import { index } from '~/api/user/exercise'
+import { getExercises } from '~/api/exercise'
+import ListSystemExercise from '~/components/ListSystemExercise.vue'
 export default {
-    async asyncData({app}) {
+    async asyncData({app, query}) {
         const {data: categoriesList} = await exerciseCategory(app.$axios)
-
-        return { categories: categoriesList || [{ id : '', name: ''}] }
+        const {data: muscles} = await allMuscles(app.$axios)
+        const  exercises = await index(app.$axios, query)
+        return { 
+            categories: categoriesList || [{ id : '', name: ''}],
+            muscles: muscles,
+            exercises: exercises.data,
+            total: exercises.meta.total,
+            pageSize: exercises.meta.per_page,
+            currentPage: exercises.meta.current_page,
+        }
     },
-
+    components : {
+        ListSystemExercise,
+        TableExerciseUser
+    },
+    watchQuery: true,
     data() {
       return {
         rules: {
                 name: [
-                    { required: true, message: 'Please input Activity name', trigger: 'blur' },
+                    { required: true, message: 'Please input name', trigger: 'blur' },
                     { max: 15, message: 'max 15 character', trigger: 'blur' },
                 ],
-                categories_id: [
+                category: [
                     { required: true, message: 'Please input category', trigger: 'change' },
                 ],
-                calories: [
-                    { required: true, message: 'Please input calories', trigger: 'blur' },
+                rm: [
+                    { required: true, message: 'Please input rep to failure', trigger: 'blur' },
                 ],
 
             },
         dialogVisible: false,
         exercise: {
                 name: '',
-                calories: '',
+                rm: '',
                 categories_id: '',
                 compound: false,
-                failure: ''
-
-            }
+                failure: '',
+                muscle:''
+        },
+        title:'', 
+        exerciseSelected: null
       };
     },
     watch: {
@@ -89,12 +127,84 @@ export default {
     computed: {
         disabledMovement() {
             return this.exercise.categories_id === 2
+        },
+
+        muscleList () {
+            return this.convertMuscle(this.muscles)
         }
     },
 
+    mounted () {
+        console.log(this.muscleList,'list muscle')
+    },
+
     methods: {
-        openDialog() {
+        async fetchExercise () {
+            const {data: myExercise} = await index(this.$axios)
+            this.myExercise = myExercise
+        },
+
+        convertMuscle (muscles) {
+            const muscleList = muscles.map((value) => {
+            value =  _mapKeys(value , (val, key) => {
+                    if(key === 'id'){
+                    return 'value'
+                    }
+                    if(key === 'name'){
+                    return 'label'
+                    }
+                    
+                })
+                delete value.undefined
+                return value
+            })
+            
+            return muscleList
+        },
+
+        convertMuscleEdit (muscles) {
+            const muscleList = []
+            muscles.forEach((item) => {
+                muscleList.push(item.id)
+            })
+
+            
+            return muscleList
+        },
+
+        editExercise () {
+
+        },
+
+        openDialog () {
             this.dialogVisible = true
+            this.title = 'Create exercise'
+            
+        },
+
+        openDialogEdit (exercise) {
+            this.dialogVisible = true
+            this.exercise = _cloneDeep(exercise)
+            this.exercise.muscle = _cloneDeep(this.convertMuscleEdit(this.exercise.muscle))
+            this.exercise.category = _cloneDeep(exercise.category.id)
+            console.log(this.muscleList)
+            this.title = 'Edit exercise'
+        },
+
+        offDialog () {
+            this.exercise = {
+                name: '',
+                rm: '',
+                categories_id: '',
+                compound: false,
+                failure: '',
+                muscle:''
+            }
+            this.dialogVisible = false
+        },
+
+        handleClose () {
+            this.offDialog()
         },
 
         caculateCalories (exercise) {
@@ -102,7 +212,7 @@ export default {
             if (exercise.categories_id === 2) {
             if(exercise.failure > 7 &&  exercise.failure <=10)
                 calo += 2
-            if(exercise.failure <7)
+            if(exercise.failure <7 && exercise.failure !== 0)
                 calo += 4
             if(exercise.failure > 12)
                 calo += -1
@@ -122,12 +232,16 @@ export default {
                     try{
                         const formExercise = {
                             name: this.exercise.name,
-                            categories_id: this.exercise.categories_id,
-                            calories: this.exercise.calories,
+                            exercise_categories_id: this.exercise.category,
+                            rm: this.exercise.failure,
                             compound: this.exercise.compound,
+                            muscle: this.exercise.muscle
                         }
-                        console.log(formExercise.calories)
-                        await update(this.$axios, this.$route.params.user, formExercise)
+                        console.log(formExercise)
+                        await createExercise(this.$axios, formExercise)
+                        this.$message.success('Create exercise succesfully')
+                        this.dialogVisible = false
+                        this.fetchExercise()
                     }catch(e){
                         this.$message.error('Some thing went wrong')
                     }

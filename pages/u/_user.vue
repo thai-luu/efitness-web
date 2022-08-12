@@ -10,7 +10,7 @@
             >
                 <el-menu-item :index="`${route}/profile`">Profile</el-menu-item>
                 <el-menu-item :index="`${route}/exercise_mode`">Exercise</el-menu-item>
-                <el-menu-item :index="`${route}/diet?day_use=${day}`">Diet</el-menu-item>
+                <el-menu-item :index="`${route}/diet?day_use=${day}`">Diary</el-menu-item>
                 <el-menu-item :index="`${route}/training_session`">Training Session</el-menu-item>
                 <el-menu-item :index="`${route}/food`">My foods</el-menu-item>
       </el-menu>
@@ -54,12 +54,18 @@ export default {
     computed:{
       defaultActive() {
         const pathArr = this.$route.path.split('/');
+        const path3 = pathArr[3].split('?')
         const path = `/${pathArr[1]}/${pathArr[2]}/${pathArr[3]}`;
         const pathDefault = pathArr[3]
         if(pathDefault === undefined || pathDefault === '')
         return `/${pathArr[1]}/${pathArr[2]}/profile`;
-        else
-        return path || `/${pathArr[1]}/${pathArr[2]}`;
+        else{
+          if(path3[0] === 'diet')
+            return `${path}?day_use=${this.day}` || `/${pathArr[1]}/${pathArr[2]}`;
+          else
+            return path || `/${pathArr[1]}/${pathArr[2]}`;
+        }
+        
       },
 
       route(){

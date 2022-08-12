@@ -5,6 +5,7 @@
       <h1 class="font-bold pl-2">Food</h1>
     </div>
   </div>
+  <SearchFood :search="search"/>
   <div class="flex flex-wrap">  
     <el-table
       :data="foods"
@@ -63,6 +64,9 @@
         prop="classify"
         label="Classify"
         width="120">
+          <template slot-scope="scope">
+              <span v-if="scope.row.classify">{{scope.row.classify.name}}</span>
+          </template>
       </el-table-column>
       <el-table-column
         prop="calo"
@@ -74,8 +78,8 @@
         label="Operations"
         width="120">
         <template slot-scope="{row}">
-          <el-button @click="onEdit(row.id)" type="text" size="small">Detail</el-button>
-          <el-button type="text" size="small">Edit</el-button>
+          <el-button @click="onEdit(row.id)" type="text" size="small">Edit</el-button>
+          <el-button type="text" @click="deleteFood(row.id)" size="small">Delete</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -89,14 +93,15 @@
 </div>
 </template>
 <script>
-import { index } from '~/api/admin/food';
+import { index, deleteFood } from '~/api/admin/food';
 import { mapState } from 'vuex';
 import Pagination from '~/components/shared/Pagination.vue'
-
+import SearchFood from '~/components/shared/food/SearchFood.vue';
 export default {
     layout: 'admin',
     components: {
-      Pagination
+      Pagination,
+      SearchFood
     },
 
     async asyncData({app, query}){
@@ -107,6 +112,12 @@ export default {
               total: foods.meta.total,
               pageSize: foods.meta.per_page,
               currentPage: foods.meta.current_page,
+              search: {
+                classify: parseInt(query.classify, 10) || '',
+                protein: parseInt(query.protein, 10) || '',
+                carb: parseInt(query.carb, 10) || '',
+                fat: parseInt(query.fat, 10) || ''
+            }
             }
         }catch (err){
           return {foods:[] }
@@ -115,13 +126,36 @@ export default {
     },
     
     watchQuery: true,
+    created () {
+      console.log(this.foods)
+    },
 
     methods:{
-       onEdit(id) {
+      onEdit(id) {
         this.$router.push({path:`/admin/food/${id}/edit`})
-            },
+      },
+
       add(){
         this.$router.push({path:`/admin/food/create`})
+      },
+
+      async fetchFoods(){
+        const foods =  await index(this.$axios, this.$route.query)
+        this.foods = foods.data
+        this.total = foods.meta.total
+        this.pageSize = foods.meta.per_page
+        this.currentPage = foods.meta.current_page
+      },
+
+      async deleteFood (id) {
+        try {
+          await deleteFood(this.$axios, id)
+          this.fetchFoods()
+          this.$message.success('Delete successfully')
+        } catch (error) {
+          this.$message.error('Some thing went wrong')
+        }
+        
       }
     }
 

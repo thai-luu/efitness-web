@@ -1,10 +1,10 @@
 <template>
-    <div>
-        <el-tabs @tab-click="changeFoods" type="border-card">
-            <el-tab-pane label="System Food" ></el-tab-pane>
-            <el-tab-pane label="My Food" ></el-tab-pane>
-            <SearchFood />
-            <div v-if="tab == 1" >
+    <div class="food-user">
+        <el-tabs type="border-card">
+            <el-button :class="active === 1 ? 'active':''" @click="changeTab(1)">System Food</el-button >
+            <el-button :class="active === 0 ? 'active':''" style="margin-left:0px" @click="changeTab(0)">My Food</el-button >
+            <SearchFood :search="search"/>
+            <div v-if="active === 0" >
                 <table-food
                     :foods="foods"
                     :total="total"
@@ -16,7 +16,12 @@
                 <el-button type="danger" @click="deleteFood" plain>Delete food</el-button>
             </div>
             <div v-else>
-                <table-system-food :foods="foods"/>
+                <table-system-food 
+                    :foods="foods"
+                    :total="total"
+                    :pageSize="pageSize"
+                    :currentPage="currentPage"
+                />
             </div>
             </el-tabs>
     </div>
@@ -32,13 +37,19 @@ export default {
 
     async asyncData({app, params, query}){
         const foods  = await index(app.$axios)
-        console.log(params, query)
+
         return {
             foods: foods.data || [],
             total: foods.meta.total,
             pageSize: foods.meta.per_page,
             currentPage: foods.meta.current_page,
-            tab: query.sys || ''
+            active: parseInt(query.sys, 10) === 0 ? 0 : 1,
+            search: {
+                classify: parseInt(query.classify, 10) || '',
+                protein: parseInt(query.protein, 10) || '',
+                carb: parseInt(query.carb, 10) || '',
+                fat: parseInt(query.fat, 10) || ''
+            }
         }
 
     },
@@ -47,6 +58,7 @@ export default {
         return {
             dialogVisble: false,
             selectedFood: [],
+            active: 1
         }
     },
 
@@ -69,18 +81,19 @@ export default {
             
         },
         
-        changeFoods (value) {
-             this.tab = value.index
-            // console.log(typeof(value.index),value.index)
+        changeTab (value) {
+            this.active = value
             this.$router.push({
                 query: _assign({}, this.$route.query, {
-                    ['sys']: value.index,
+                    ['sys']: value,
                 }),
             })
-            // console.log('sau push route',typeof(value.index),value.index)
             
-    }
+        }
+    },
 
+    created(){
+        console.log(this.active)
     },
     updated () {
         console.log('updated',this.tab)
@@ -88,3 +101,11 @@ export default {
 
 }
 </script>
+<style lang="scss">
+    .food-user{
+        .active {
+            color: white;
+            background-color: #67C23A;
+        }
+    }
+</style>
