@@ -53,7 +53,11 @@
             label="Muscles"
             width="300">
             <template slot-scope="scope">
-                <el-tag type="success" class="ml-1 mt-1" v-for="(muscle, index) in scope.row.muscle" :key="muscle.id || index">{{muscle.name}}</el-tag>
+                <div v-if="scope.row.muscles">
+                <el-tag type="success" class="ml-1 mt-1" v-for="muscle in scope.row.muscles" :key="muscle.id">
+                    {{muscle.name}}
+                </el-tag>
+                </div>
             </template>
         </el-table-column>
         <el-table-column

@@ -5,23 +5,7 @@
         <div class="flex flex-col items-start">Breakfast
             <div>
                 <el-form-item label="Name" v-for="(food, index) in form.breakfast" :key="`breakfast${index}`">
-                    <el-autocomplete
-                            popper-class="my-autocomplete"
-                            v-model="food.name"
-                            :fetch-suggestions="querySearch"
-                            placeholder="Please input"
-                            @select="handleSelectBreakfastFoods"
-                            value-key="name"
-                        >
-                            <i
-                                class="el-icon-edit el-input__icon"
-                                slot="suffix"
-                                >
-                            </i>
-                            <template slot-scope="{ item, index }">
-                                <div class="value">{{ item.name }}</div>
-                            </template>
-                    </el-autocomplete>
+                    <el-input v-model="food.name" disabled class="w-24"></el-input>
                     <span class="text-black ml-5"> Serving </span>
                     <el-input-number class="ml-2 w-36" :min="0" v-model="food.serving" />
                     <el-button type="danger" icon="el-icon-minus" @click="deleteBreakfast(index)"></el-button>
@@ -32,24 +16,7 @@
         </div>
         <div class="flex flex-col items-start">Lunch
             <el-form-item label="Name" v-for="(food, index) in form.lunch" :key="`lunch${index}`">
-                <el-autocomplete
-                        popper-class="my-autocomplete"
-                        v-model="food.name"
-                        :fetch-suggestions="querySearch"
-                        placeholder="Please input"
-                        @select="handleSelectLunchFoods"
-                        value-key="name"
-                    >
-                        <i
-                            class="el-icon-edit el-input__icon"
-                            slot="suffix"
-                            >
-                        </i>
-                        <template slot-scope="{ item, index }">
-                            <div class="value">{{ item.name }}</div>
-                            <span class="protein">{{ item.protein }}</span>
-                        </template>
-                </el-autocomplete>
+                <el-input v-model="food.name" disabled class="w-24"></el-input>
                 <span class="text-black ml-5"> Serving </span>
                 <el-input-number class="ml-2 w-36" :min="0" v-model="food.serving" />
                 <el-button type="danger" icon="el-icon-minus" @click="deleteLunch(index)"></el-button>
@@ -59,24 +26,7 @@
         </div>
         <div class="flex flex-col items-start">Dinner
             <el-form-item label="Name" v-for="(food, index) in form.dinner" :key="`dinner${index}`">
-                <el-autocomplete
-                        popper-class="my-autocomplete"
-                        v-model="food.name"
-                        :fetch-suggestions="querySearch"
-                        placeholder="Please input"
-                        @select="handleSelectDinnerFoods"
-                        value-key="name"
-                    >
-                        <i
-                            class="el-icon-edit el-input__icon"
-                            slot="suffix"
-                            >
-                        </i>
-                        <template slot-scope="{ item, index }">
-                            <div class="value">{{ item.name }}</div>
-                            <span class="protein">{{ item.protein }}</span>
-                        </template>
-                </el-autocomplete>
+                <el-input v-model="food.name" disabled class="w-24"></el-input>
                 <span class="text-black ml-5">Serving</span>
                 <el-input-number class="ml-2 w-36" :min="0" v-model="food.serving" />
                 <el-button type="danger" icon="el-icon-minus" @click="deleteDinner(index)"></el-button>
@@ -86,24 +36,7 @@
         </div>
         <div class="flex flex-col items-start">Snacks
             <el-form-item label="Name" v-for="(food, index) in form.snacks" :key="`snacks${index}`">
-                <el-autocomplete
-                        popper-class="my-autocomplete"
-                        v-model="food.name"
-                        :fetch-suggestions="querySearch"
-                        placeholder="Please input"
-                        @select="handleSelectSnacksFoods"
-                        value-key="name"
-                    >
-                        <i
-                            class="el-icon-edit el-input__icon"
-                            slot="suffix"
-                            >
-                        </i>
-                        <template slot-scope="{ item, index }">
-                            <div class="value">{{ item.name }}</div>
-                            <span class="protein">{{ item.protein }}</span>
-                        </template>
-                </el-autocomplete>
+                <el-input v-model="food.name" disabled class="w-24"></el-input>
                 <span class="text-black ml-5" >Serving</span>
                 <el-input-number class="ml-2 w-36" :min="0" v-model="food.serving" />
                 <el-button type="danger" icon="el-icon-minus" @click="deleteSnacks(index)"></el-button>
@@ -119,11 +52,11 @@
                     <div v-if="exercise.category.id === 2">
                         <div v-for="exer in exercise.sets">
                             <span>Weight</span>
-                            <el-input-number class="w-40" v-model="exer.weight" placeholder="weight"></el-input-number>
+                            <el-input-number class="w-40" v-model="exer.weight" placeholder="weight" :min="0"></el-input-number>
                             <span>Reps</span>
-                            <el-input-number class="w-40" v-model="exer.reps" placeholder="reps"></el-input-number>
-                            <span>Sets</span>
-                            <el-input-number class="w-40" v-model="exer.rm"  placeholder="How many rm . is this weight"></el-input-number>
+                            <el-input-number class="w-40" v-model="exer.reps" placeholder="reps" :min="0"></el-input-number>
+                            <span>Rm</span>
+                            <el-input-number class="w-40" v-model="exer.rm" :min="0"  placeholder="How many rm . is this weight"></el-input-number>
                         </div>
                         <br>
                         <el-button type="success" plain @click="addSet(index)">Add set</el-button>
@@ -146,7 +79,7 @@
                 effect="plain"
             >
                 <i class="el-icon-bottom">
-                    <span>Calories nạp vào: 2351 </span>
+                    <span>Calories nạp vào: {{calories_in}} </span>
                 </i>
             </el-tag>
             <el-tag
@@ -154,7 +87,7 @@
                 effect="plain"
             >
                 <i class="el-icon-top">
-                    <span>Calories tiêu thụ: </span>
+                    <span>Calories tiêu thụ: {{calories_out}} </span>
                 </i>
             </el-tag>
         </div>
@@ -212,15 +145,10 @@
     <table-food-dialog
         :classifies="classifies"  
         :dialogVisible="dialogVisible"
-        :foods="foods"
         @emitFood="pushFood"
         @offDialog="offDialog"     
     />
     <dialog-table-training-session
-        :training_sessions="training_sessions"
-        :currentPage="currentPage" 
-        :total="total"
-        :pageSize="pageSize"
         :dialogTrain="dialogTrain"
         @offDialogTraining="offDialogTraining"
         @addTraining="addTraining"
@@ -248,7 +176,7 @@ import { index, store } from '~/api/user/diary'
 import { evaluate } from '~/api/user/evaluate'
 import { index as indexClassify } from '~/api/classify'
 import { index as indexFood } from '~/api/user/food'
-import { index as indexTrainingSession } from '~/api/training_session'
+import { index as indexTrainingSession } from '~/api/user/training_session'
 import DatePick from '~/components/DatePick.vue'
 import PieChart from '~/components/user/PieChart.vue'
 import TableFoodDialog from '~/components/food/TableFoodDialog.vue'
@@ -260,12 +188,12 @@ export default {
         TableFoodDialog,
         DialogTableTrainingSession
     },
-
+    
     async asyncData({ app, query, params }){
         const { data : meal } = await index(app.$axios , params.user, query)
         const { data: classifies } = await indexClassify(app.$axios)
-        const {data: foods} = await indexFood(app.$axios)
-        const  training_sessions = await indexTrainingSession(app.$axios)
+        // const {data: foods} = await indexFood(app.$axios)
+        // const  training_sessions = await indexTrainingSession(app.$axios)
         const form = {
             breakfast: _get(meal, '[0].breakfast', []),
             lunch: _get(meal, '[0].lunch', []),
@@ -275,14 +203,15 @@ export default {
             day_use: _get(meal, '[0].day_use', '')
         }
         return { 
-            meal, form, classifies, foods, 
-            training_sessions: training_sessions.data,
-            total: training_sessions.meta.total,
-            pageSize: training_sessions.meta.per_page,
-            currentPage: training_sessions.meta.current_page
+            meal, form, classifies, 
+            //foods, 
+            // training_sessions: training_sessions.data,
+            // total: training_sessions.meta.total,
+            // pageSize: training_sessions.meta.per_page,
+            // currentPage: training_sessions.meta.current_page
             }
     },
-    
+    watchQuery: true,
     data() {
         return {
            dinnerForm: '',
@@ -298,8 +227,6 @@ export default {
            mealSelected: 1,
            dialogTrain: false,
            breakfastKey: 0,
-           calories_in: 0,
-           calories_out: 0,
         }
     },
     
@@ -312,6 +239,37 @@ export default {
             this.arrValueBreakfast[3] + this.arrValueLunch[3] + this.arrValueDinner[3] + this.arrValueSnacks[3],
            ]
         },
+
+        calories_out(){
+            let calo = 0;
+            if(this.form.training.exercises !== undefined){
+                this.form.training.exercises.forEach((item) => {
+                    calo += this.caculateCalorieExercise(item)
+                })
+            }
+            return (calo + this.caloriesBMI).toFixed(2)
+        },
+
+        caloriesBMI(){
+            let calories =  9.99*this.$auth.user.data.weight + 6.25*this.$auth.user.data.height - 4.92*this.$auth.user.data.age
+            if(this.$auth.user.data.sex === 1)
+            calories += 5
+            else 
+            calories-= 161
+            return calories
+        },
+
+        caloriesTDE() {
+            if(this.form.training === '')
+            return this.caloriesBMI * 1.5
+            else
+            return this.caloriesBMI * 1.2
+        },
+
+        calories_in() {
+            return this.totalCalories(this.form.breakfast) + this.totalCalories(this.form.lunch) + this.totalCalories(this.form.dinner) + this.totalCalories(this.form.snacks)
+        },
+
         showPieBreak(){
             return _isEqual(this.arrValueBreakfast,[0,0,0,0])
         },
@@ -343,7 +301,7 @@ export default {
             },
             deep: true
         },
-
+        
         'form.lunch': {
             handler(){
             this.arrValueLunch = this.changeArrValue(this.form.lunch)
@@ -366,10 +324,57 @@ export default {
         },
         
     },
-
-    watchQuery: true,
     
     methods:{
+        addSet (index) {
+            const set = {
+                weight: 0,
+                reps: 0,
+                rm: 0
+            }
+            this.form.training.exercises[index].sets.push(set)
+        },
+
+        caculateCalorieExercise (exercise) {
+            let calo = 8
+            let calories = 0
+            let time = 0
+            if (exercise.categories_id === 2) {
+            if(exercise.failure > 7 &&  exercise.failure <=10)
+                calo += 2
+            if(exercise.failure <7 && exercise.failure !== 0)
+                calo += 4
+            if(exercise.failure > 12)
+                calo += -1
+            }
+            if(exercise.compound == true)
+                calo = calo * 2
+            if (exercise.sets.length > 0){
+                _forEach(exercise.sets, (val) => {
+                    let rep = val.reps || 0
+                    console.log('rep', rep)
+                    time += (rep*5)/60
+                    let timing = (rep*5)/60
+                    calories += timing*calo
+                    console.log(timing, calories, calo)
+                })
+            } else {
+                let timing = exercise.time || 0
+                time += timing
+                // console.log(123, time)
+                calories += timing*calo
+            }
+            return calories
+        },
+
+        totalCalories (form) {
+            let calories = 0
+            _forEach(form, (value) => {
+                calories += value.calo*value.serving
+            })
+            return calories
+        },
+
         chooseDate (value) {
             this.form.day_use = value
             
@@ -384,6 +389,7 @@ export default {
         },
 
         addTraining (training) {
+            console.log(123)
             this.form.training = training
             this.dialogTrain = false
         },
@@ -522,25 +528,6 @@ export default {
             
         },
 
-        querySearch (queryString, cb) {
-            let links = this.foodList;
-            let results = queryString ? links.filter(this.createFilter(queryString)) : links;
-            // call callback function to return suggestion objects
-            cb(results);
-        },
-
-        createFilter (queryString) {
-            return (link) => {
-            return (link.name.toLowerCase().indexOf(queryString.toLowerCase()) >= 0);
-            };
-        },
-
-         getStoreLocal () {
-            if(process.client) {
-                this.foodList = JSON.parse(localStorage.foods)
-            }
-        },
-
         changeArrValue (form) {
             const arr = []
             let protein = 0
@@ -571,7 +558,11 @@ export default {
         
         async evaluate() {
             try {
-                const judge = await evaluate(this.$axios, this.form)
+                const form = _cloneDeep(this.form)
+                form.caloTDE = this.caloriesTDE.toFixed(2)
+                form.caloIn = this.calories_in.toFixed(2)
+                form.caloBMI = this.caloriesBMI.toFixed(2)
+                await evaluate(this.$axios, form)
                 this.$message.succes('Update diary successfully')
             } catch (error) {
                 this.$message.error('Some thing went wrong')
@@ -585,22 +576,13 @@ export default {
 
     },
 
-    mounted () {
-        this.getStoreLocal()
-        // this.changeArrValue(this.form.breakfast)
-        // this.changeArrValue(this.form.lunch)
-        // this.changeArrValue(this.form.dinner)
-        // this.changeArrValue(this.form.snacks)
-         
-    },
-
     created() {
-        this.getStoreLocal()
         this.breakfastSend = this.breakfast
         this.arrValueBreakfast = this.changeArrValue(this.form.breakfast)
         this.arrValueLunch = this.changeArrValue(this.form.lunch)
         this.arrValueDinner = this.changeArrValue(this.form.dinner)
         this.arrValueSnacks = this.changeArrValue(this.form.snacks)
+        
     }
 }
 </script>

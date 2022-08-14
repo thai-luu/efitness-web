@@ -1,1 +1,1 @@
-export const index = (axios) => axios.get('/api/food').then(_ => _.data)
+export const index = (axios, params) => axios.get('/api/food', { params }).then(_ => _.data)

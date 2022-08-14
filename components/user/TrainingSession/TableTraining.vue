@@ -1,6 +1,6 @@
 <template>
     <div>
-        <search-training />
+        <search-training-dialog @fetch="fetchExercise" />
         <div class="flex flex-wrap">  
             <el-table
             :data="training_sessions"
@@ -19,16 +19,12 @@
                     width="120">
                 </el-table-column>
                 <el-table-column
-                    prop="calories"
-                    label="Calories"
-                    width="120">
-
-                </el-table-column>
-                <el-table-column
-                    prop="time"
-                    label="Time"
-                    width="120">
-
+                    prop="exercise"
+                    label="Exercise"
+                >
+                    <template slot-scope="{row}">
+                    <el-tag class="ml-1 mt-1" v-for="exercise in row.exercises" :key="exercise.id" type="success">{{exercise.name}}</el-tag>
+                    </template>
                 </el-table-column>
             </el-table>
         </div>
@@ -40,13 +36,13 @@
     </div>
 </template>
 <script>
-import SearchTraining from '~/components/shared/training_session/SearchTraining.vue';
+import SearchTrainingDialog from '~/components/shared/training_session/SearchTrainingDialog.vue';
 import _cloneDeep from 'lodash/cloneDeep';
 import Pagination from '~/components/shared/Pagination.vue'
 export default {
     components: {
         Pagination,
-        SearchTraining
+        SearchTrainingDialog
     },
 
     props: {
@@ -63,12 +59,20 @@ export default {
     },
 
     methods: {
+        fetchExercise(search) { 
+            this.$emit('fetchExercise', search)
+        },
+
+        offDialog() {
+            this.$emit('offDialog')
+        },
 
         handleCurrentChange(val) {
             this.trainingSelected = val;
         },
 
         emitTrainingSession () {
+            console.log(this.trainingSelected)
             this.$emit('emitTraining', this.trainingSelected)
         },
     

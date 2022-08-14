@@ -1,88 +1,60 @@
 <template>
-    <el-form class ="searchFood" v-model="searchExercise">
+    <el-form class ="searchFood" v-model="searchTrainVal">
         <el-form-item label="Name" size="small">
-            <el-input v-model="searchExercise.name">
+            <el-input v-model="searchTrainVal.nameTrain">
             </el-input>
         </el-form-item>
-        <el-form-item label="Category">
-            <el-select v-model="searchExercise.category" clearable>
-                <el-option v-for="option in optionsCategory" :key="option.value" :label="option.label" :value="option.value" />
-            </el-select>
-        </el-form-item>
-        <el-form-item label="Muscles">
-            <el-select v-model="searchExercise.muscles"
+        <el-form-item label="Muscle">
+            <el-select v-model="searchTrainVal.muscles"
                 multiple
                 filterable
                 default-first-option
                 placeholder="Choose tags for your article"
+                clearable
             >
                 <el-option v-for="option in optionsMuscles" :key="option.value" :label="option.label" :value="option.value" />
             </el-select>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="searchEx" plain>Search</el-button>
+            <el-button type="primary" @click="searchFood" plain>Search</el-button>
         </el-form-item>
         <el-form-item>
-            <el-button type="primary" @click="resetSearch" plain>Reset search</el-button>
+            <el-button type="primary" @click="resetSearch" plain>Reset Search</el-button>
         </el-form-item>
     </el-form>
 </template>
 <script>
 const searchDefault = {
+        nameTrain:'',
         muscles:[],
-        name:'',
-        category: '',
     }
 import _assign from 'lodash/assign'
 import _cloneDeep from 'lodash/cloneDeep';
 export default {
+    props: {
+        search: Object
+    },
 
     data () {
         return {
-            searchExercise: {
+            searchTrainVal: {
                 muscles:[],
-                name:'',
-                category: '',
+                nameTrain:'',
             },
             optionsMuscles: [],
             muscles: [],
-            optionsCategory: [
-                {
-                    label: 'cardio',
-                    value: 1
-                },
-                {
-                    label: 'strength',
-                    value: 2
-                }
-            ]
 
         }
     },
-    mounted () {
-        this.searchExercise.category = parseInt(this.$route.query.category, 10) || ''
-        if(this.$route.query.muscles){
-        this.searchExercise.muscles = this.$route.query.muscles.map((item) => {
-            return parseInt(item, 10)
-        }) || []
-    }
-        this.searchExercise.name = this.$route.query.name ||''
-    },
 
     methods: {
-        searchEx() {
-            this.$router.push({
-                query: _assign({}, this.$route.query, {
-                    ['category']: this.searchExercise.category,
-                    ['muscles']: this.searchExercise.muscles,
-                    ['name']: this.searchExercise.name,
-                }),
-            })
+        searchFood () {
+            this.$emit('fetch', this.searchTrainVal)
         },
 
         resetSearch(){
-            this.searchExercise =  _cloneDeep(searchDefault)
-            this.searchEx()
+            this.searchTrainVal =  _cloneDeep(searchDefault)
+            this.searchFood()
         },
 
         getLocalMuscles () {
@@ -112,7 +84,6 @@ export default {
         this.optionsMuscles = _cloneDeep(this.convertMuscle(this.muscles))
         
     }
-    
 }
 </script>
 <style lang="scss">

@@ -4,10 +4,13 @@
         :visible.sync="dialog"
         width="70%"
         :before-close="handleClose"
+        class="food-user-dialog"
         >
         <!-- <exercise-filter :categories="categories" :muscles="muscles" @search="search" /> -->
+        <el-button :class="active === 1 ? 'active':''" @click="changeTab(1)">System foods</el-button >
+        <el-button :class="active === 0 ? 'active':''" style="margin-left:0px" @click="changeTab(0)">My foods</el-button >
             <div>
-            <SearchFood />
+            <SearchFoodDialog @fetch="fecthFoods"/>
             </div>
             <el-table
                 :data="foods.filter(foods => !search || foods.name.toLowerCase().includes(search.toLowerCase()))"
@@ -95,23 +98,39 @@
 import _cloneDeep from 'lodash/cloneDeep';
 import _mapKeys from 'lodash/mapKeys';
 import _forEach from 'lodash/forEach';
-import SearchFood from '~/components/shared/food/SearchFood.vue';
+import _assign from 'lodash/assign'
+import { index as indexFood } from '~/api/user/food'
+import SearchFoodDialog from '~/components/shared/food/SearchFoodDialog.vue';
 export default {
 
     components: {
-        SearchFood
+        SearchFoodDialog
     },
     
     props: {
         classifies: Array,
         dialogVisible: Boolean,
-        foods: Array
+        
   },
+    
+    async fetch() {
+        const foods = await indexFood(this.$axios, this.$route.query)
+        this.foods = foods.data, 
+        this.total = foods.meta.total,
+        this.pageSize = foods.meta.per_page,
+        this.currentPage = foods.meta.current_page
+    },
+
     data () {
         return {
             dialog: true,
             classifyList: [],
-            search: ''
+            search: '',
+            active: 1,
+            foods:[],
+            total:null,
+            pageSize:null,
+            currentPage:null
         }
     },
 
@@ -123,6 +142,23 @@ export default {
     },
 
     methods: {
+        async fecthFoods(search) {
+            const foods = await indexFood(this.$axios, search)
+            this.foods = foods.data, 
+            this.total = foods.meta.total,
+            this.pageSize = foods.meta.per_page,
+            this.currentPage = foods.meta.current_page
+        },
+
+        changeTab (value) {
+            this.active = value
+            this.$router.push({
+                query: _assign({}, this.$route.query, {
+                    ['sys']: value,
+                }),
+            })
+            
+        },
 
         filterClassifies(value, row) {
             return row.classify.id === value
@@ -146,7 +182,7 @@ export default {
             this.multipleSelection = val;
         },
     },
-
+    
     created () {
         this.dialog = this.dialogVisible
         const classifies = this.classifies.map((value) => {
@@ -166,3 +202,11 @@ export default {
     }
 }
 </script>
+<style lang="scss">
+    .food-user-dialog{
+        .active {
+            color: white;
+            background-color: #67C23A;
+        }
+    }
+</style>

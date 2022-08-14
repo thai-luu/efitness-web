@@ -26,6 +26,7 @@ export default {
     computed:{
         ...mapState('exercise',['exercises'])
     },
+    watchQuery: true,
     mounted () {
         
     }

@@ -98,6 +98,7 @@ import { mapState } from 'vuex';
 import Pagination from '~/components/shared/Pagination.vue'
 import SearchFood from '~/components/shared/food/SearchFood.vue';
 export default {
+
     layout: 'admin',
     components: {
       Pagination,
@@ -116,7 +117,9 @@ export default {
                 classify: parseInt(query.classify, 10) || '',
                 protein: parseInt(query.protein, 10) || '',
                 carb: parseInt(query.carb, 10) || '',
-                fat: parseInt(query.fat, 10) || ''
+                fat: parseInt(query.fat, 10) || '',
+                cenluloza: parseInt(query.cenluloza, 10) || '',
+                name: query.name
             }
             }
         }catch (err){

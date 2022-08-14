@@ -77,9 +77,12 @@ export default {
     return {
     }
   },
-  async asyncData({app}){
+  
+  watchQuery: true,
+
+  async asyncData({app, query}){
       try{
-          const exercises = await getExercises(app.$axios)
+          const exercises = await getExercises(app.$axios, query)
           return { 
             exercises: exercises.data,
             total: exercises.meta.total,

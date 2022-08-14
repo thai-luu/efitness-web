@@ -426,12 +426,6 @@ export default {
             };
         },
 
-         getStoreLocal () {
-            if(process.client) {
-                this.foodList = JSON.parse(localStorage.foods)
-            }
-        },
-
         changeArrValue (form) {
             const arr = []
             let protein = 0
@@ -466,17 +460,7 @@ export default {
 
     },
 
-    mounted () {
-        this.getStoreLocal()
-        // this.changeArrValue(this.form.breakfast)
-        // this.changeArrValue(this.form.lunch)
-        // this.changeArrValue(this.form.dinner)
-        // this.changeArrValue(this.form.snacks)
-         
-    },
-
     created() {
-        this.getStoreLocal()
         this.breakfastSend = this.breakfast
         this.arrValueBreakfast = this.changeArrValue(this.form.breakfast)
         this.arrValueLunch = this.changeArrValue(this.form.lunch)

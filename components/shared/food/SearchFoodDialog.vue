@@ -132,28 +132,10 @@ export default {
 
         }
     },
-    mounted () {
-        this.searchFoodVal.classify = parseInt(this.$route.query.classify, 10) || ''
-        this.searchFoodVal.name = this.$route.query.name ||''
-        this.searchFoodVal.protein = parseInt(this.$route.query.protein, 10) || ''
-        this.searchFoodVal.carb = parseInt(this.$route.query.carb, 10) || ''
-        this.searchFoodVal.fat = parseInt(this.$route.query.classify, 10) || ''
-        this.searchFoodVal.cenluloza = parseInt(this.$route.query.cenluloza, 10) || ''
-    },
 
     methods: {
         searchFood () {
-            this.$router.push({
-                query: _assign({}, this.$route.query, {
-                    ['classify']: this.searchFoodVal.classify,
-                    ['protein']: this.searchFoodVal.protein,
-                    ['carb']: this.searchFoodVal.carb,
-                    ['fat']: this.searchFoodVal.fat,
-                    ['name']: this.searchFoodVal.name,
-                    ['cenluloza']: this.searchFoodVal.cenluloza,
-
-                }),
-            })
+            this.$emit('fetch', this.searchFoodVal)
         },
 
         resetSearch(){

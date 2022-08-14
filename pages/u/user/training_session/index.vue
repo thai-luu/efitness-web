@@ -48,7 +48,7 @@ export default {
     created () {
         console.log(this.training_sessions)
     },
-    
+    watchQuery: true,
     methods: {
         create_training_session() {
             this.$router.push(`/u/${this.$route.params.user}/training_session/create`)

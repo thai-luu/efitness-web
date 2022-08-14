@@ -36,7 +36,7 @@ import Tab from '~/components/food/Tab.vue';
 export default {
 
     async asyncData({app, params, query}){
-        const foods  = await index(app.$axios)
+        const foods  = await index(app.$axios, query)
 
         return {
             foods: foods.data || [],
