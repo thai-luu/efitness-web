@@ -10,7 +10,7 @@
                         <div class="time">Calories/min: {{ exercise.calories }}</div>
                         <div class="time" v-if="exercise.compound === true">Category: compound</div>
                         <div class="time" v-else>Category: transition</div>
-                        <div class="time" v-if="exercise.level !== null">Level: {{ exercise.level.name_vi }}</div>
+                        <div class="time" v-if="exercise.level_id !== null">Level: {{ exercise.level_id.name_vi }}</div>
                         <el-button type="text" class="button" @click="view(exercise.id)">Xem chi tiết</el-button>
                     </div>
                 </div>

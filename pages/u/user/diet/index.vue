@@ -94,13 +94,44 @@
         <br>
         <div class="border-green-300 border-4 rounded-lg px-1 py-1">
             <div>Đánh giá từ hệ thống: </div>
+            <div v-if="form.evaluate">
             <div>
                 <span>Dinh dưỡng: </span>
                 <el-tag
                 type="warning"
                 effect="plain"
+                v-if="form.evaluate.needProtein"
                 >
-                <span>Thiếu protein(mức protein phù hợp nhất với thể trạng và mục tiêu của bạn: 40%) </span>
+                <span v-if="form.evaluate.protein == -1">Thiếu protein</span>
+                <span v-if="form.evaluate.protein == 1"> Thừa protein</span>
+                <span v-if="form.evaluate.needProtein">(mức protein phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needProtein}}) </span>
+                </el-tag>
+                <el-tag
+                type="warning"
+                effect="plain"
+                v-if="form.evaluate.needCarb"
+                >
+                <span v-if="form.evaluate.carb == -1">Thiếu carb</span>
+                <span v-if="form.evaluate.carb == 1"> Thừa carb</span>
+                <span v-if="form.evaluate.needCarb">(mức cacbohydrat phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needCarb}}) </span>
+                </el-tag>
+                <el-tag
+                type="warning"
+                effect="plain"
+                v-if="form.evaluate.needFat"
+                >
+                <span v-if="form.evaluate.fat == -1">Thiếu fat</span>
+                <span v-if="form.evaluate.fat == 1"> Thừa fat</span>
+                <span v-if="form.evaluate.needFat">(mức fat phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needFat}}) </span>
+                </el-tag>
+                <el-tag
+                type="warning"
+                effect="plain"
+                v-if="form.evaluate.needCenluloza"
+                >
+                <span v-if="form.evaluate.cenluloza == -1">Thiếu cenluloza</span>
+                <span v-if="form.evaluate.cenluloza == 1"> Thừa cenluloza</span>
+                <span>(mức cenluloza phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needCenluloza}}) </span>
                 </el-tag>
             </div>
             <br>
@@ -110,6 +141,7 @@
                 <el-tag
                 type="warning"
                 effect="plain"
+                v-if="form.evaluate.trainingLevel"
                 >
                 <span>
                     Buổi tập có độ khó cao chưa phù hợp với kinh nghiệm của bạn
@@ -119,6 +151,7 @@
                 type="warning"
                 effect="plain"
                 class="mt-2"
+                v-if="form.evaluate.cardio"
                 >
                 <span>Thời gian cardio cao không phù hợp với mục tiêu của bạn </span>
                 </el-tag>
@@ -134,6 +167,7 @@
                 <span>Calo thiếu hụt: 109</span>
                 <span>Trong ngưỡng an toàn, chưa đúng với mục tiêu</span>
                 </el-tag>
+            </div>
             </div>
         </div>
         <br>
@@ -200,6 +234,7 @@ export default {
             dinner: _get(meal, '[0].dinner', []),
             snacks:  _get(meal, '[0].snacks', []),
             training: _get(meal, '[0].training', ''),
+            evaluate: _get(meal, '[0].evaluate', ''),
             day_use: _get(meal, '[0].day_use', '')
         }
         return { 
@@ -227,6 +262,7 @@ export default {
            mealSelected: 1,
            dialogTrain: false,
            breakfastKey: 0,
+           evaluateRes:''
         }
     },
     
@@ -562,8 +598,10 @@ export default {
                 form.caloTDE = this.caloriesTDE.toFixed(2)
                 form.caloIn = this.calories_in.toFixed(2)
                 form.caloBMI = this.caloriesBMI.toFixed(2)
-                await evaluate(this.$axios, form)
-                this.$message.succes('Update diary successfully')
+                form.caloOut = this.calories_out
+                this.form.evaluate = await evaluate(this.$axios, form)
+                console.log(this.evaluateRes)
+                this.$message.success('Caculate successfully')
             } catch (error) {
                 this.$message.error('Some thing went wrong')
             }
