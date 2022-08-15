@@ -3,7 +3,7 @@
         <!-- <div>System training session</div>
         <list-system-training :training-sessions="training_sessions" />
         <br> -->
-        <div>My training session</div>
+        <div class="text-xl text-transform: uppercase font-bold">My training session</div>
         <table-training-manager 
             :training-sessions="training_sessions" 
             :currentPage="currentPage" 

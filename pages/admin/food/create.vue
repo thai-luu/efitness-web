@@ -1,5 +1,10 @@
 <template>
-<el-form ref="form" v-model="form" label-width="120px">
+<div class="bg-gray-800 pt-3">
+    <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
+      <h1 class="font-bold pl-2">Create food</h1>
+    </div>
+</div>
+<el-form ref="form" v-model="form" label-width="120px" class="create-foods-admin">
   <el-form-item label="Name">
     <el-input type="text" v-model="form.name"></el-input>
   </el-form-item>
@@ -15,17 +20,17 @@
   <el-form-item label="cenluloza">
     <el-input type="number" v-model="form.cenluloza"></el-input>
   </el-form-item>
-  <el-form-item label="vitaminA">
-    <el-input type="number" v-model="form.vitaminA"></el-input>
+  <el-form-item label="calcium">
+    <el-input type="number" v-model="form.calcium"></el-input>
   </el-form-item>
-  <el-form-item label="vitaminB">
-    <el-input type="number" v-model="form.vitaminB"></el-input>
+  <el-form-item label="cholesteron">
+    <el-input type="number" v-model="form.cholesteron"></el-input>
   </el-form-item>
-  <el-form-item label="kali">
-    <el-input type="number" v-model="form.kali"></el-input>
+  <el-form-item label="trans">
+    <el-input type="number" v-model="form.trans"></el-input>
   </el-form-item>
-  <el-form-item label="natri">
-    <el-input type="number" v-model="form.natri"></el-input>
+  <el-form-item label="sodium">
+    <el-input type="number" v-model="form.sodium"></el-input>
   </el-form-item>
   <el-form-item label="classify">
     <el-select v-model="form.classify_id" placeholder="please select your classify">
@@ -56,11 +61,12 @@ export default {
                 fat:'',
                 protein:'',
                 cenluloza:'',
-                vitaminA:'',
-                vitaminB:'',
+                trans:'',
+                calcium:'',
+                sodium:'',
                 classify:'',
-                kali:'',
-                natri:'',
+                cholesteron:'',
+                calo:'',
             }
         }
     },

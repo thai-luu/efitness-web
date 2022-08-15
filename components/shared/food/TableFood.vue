@@ -35,23 +35,23 @@
             width="120">
         </el-table-column>
         <el-table-column
-            prop="vitaminA"
-            label="VitaminA"
+            prop="calcium"
+            label="calcium"
             width="120">
         </el-table-column>
         <el-table-column
-            prop="vitaminB"
-            label="VitaminB"
+            prop="sodium"
+            label="sodium"
             width="120">
         </el-table-column>
         <el-table-column
-            prop="natri"
-            label="Natri"
+            prop="trans"
+            label="trans"
             width="120">
         </el-table-column>
         <el-table-column
-            prop="kali"
-            label="Kali"
+            prop="cholesteron"
+            label="cholesteron"
             width="120">
         </el-table-column>
         <el-table-column
@@ -70,8 +70,8 @@
             label="Operations"
             width="120">
             <template slot-scope="{row}">
-            <el-button @click="onEdit(row.id)" type="text" size="small">Detail</el-button>
-            <el-button type="text" size="small">Edit</el-button>
+            <el-button @click="onDialog(row)" type="text" size="small">Edit</el-button>
+            <el-button type="text" size="small">Delete</el-button>
             </template>
         </el-table-column>
         </el-table>
@@ -103,6 +103,10 @@ export default {
             this.$emit('emitFood', this.multipleSelection)
         },
         
+        onDialog (food) {
+            console.log(food)
+            this.$emit('onDialog', food)
+        },
     }
 }
 </script>

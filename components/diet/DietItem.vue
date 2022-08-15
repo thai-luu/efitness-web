@@ -1,25 +1,24 @@
 <template>
 <div>
-<swiper-slide class="slide">
-    <div class="flex flex-wrap">
-        <div class="w-5/6 sm:w-1/2 p-6">
-            <h3 class="text-3xl text-gray-800 font-bold leading-none mb-3">
-              {{diet.name}}
-            </h3>
-            <p class="text-gray-600 mb-8">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at ipsum eu nunc commodo posuere et sit amet ligula.
-              <br />
-              <br />
-              Images from:
-              <a class="text-pink-500 underline" href="https://undraw.co/">undraw.co</a>
-            </p>
-        </div>
-        <div class="w-full sm:w-1/2 p-6">
-            <svg class="w-full sm:h-64 mx-auto" viewBox="0 0 1177 598.5" xmlns="http://www.w3.org/2000/svg">
-            </svg>
-        </div>
-    </div>
-</swiper-slide>
+<el-card :body-style="{ padding: '0px'}">
+      <img src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png" class="image">
+      <div style="padding: 14px;">
+          <span>{{diet.name}}</span>
+          <div class="bottom clearfix">
+              <div class="time" v-if="diet.protein">Protein: {{diet.protein}}%</div>
+              <div class="time" v-if="diet.carb">Carb: {{diet.carb}}%</div>
+              <div class="time" v-if="diet.fat">Fat: {{diet.fat}}%</div>
+              <div class="time" v-if="diet.range">Range: {{diet.range}}%</div>
+              <div class="time" v-if="diet.mode_targets">
+                <div class="time" v-for="mode_target in diet.mode_targets">
+                  <div> Tạng người: {{mode_target.mode.name}}</div>
+                  <div> Mục tiêu: {{mode_target.target.name}}</div>
+                </div>
+              </div>
+              <el-button type="text" class="button" @click="view(diet.id)">Xem chi tiết</el-button>
+          </div>
+      </div>
+    </el-card>
 </div>
 </template>
 <script>

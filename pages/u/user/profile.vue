@@ -1,7 +1,7 @@
 <template>
 <div class="text-black">
     <el-dialog
-        title="Tips"
+        title="Profile"
         :visible.sync="dialogVisible"
         width="30%"
         >
@@ -27,8 +27,10 @@
         <el-form-item label="Age" prop="age">
             <el-input v-model="form.age"></el-input>
         </el-form-item>
-        <el-form-item label="Telephone" prop="telephone">
-            <el-input v-model="form.telephone"></el-input>
+        <el-form-item label="Sex" prop="sex">
+            <el-select v-model="form.sex" placeholder="please select your zone">
+                <el-option v-for="sex in sexs" :key="sex.id" :label="sex.name" :value="sex.id"></el-option>
+            </el-select>
         </el-form-item>
         <el-form-item label="Target" prop="target_id">
             <el-select v-model="form.target_id" placeholder="please select your zone">
@@ -42,16 +44,16 @@
         </el-form-item>
         </el-form-item>
         <el-form-item>
-            <el-button type="success" plain @click="onSubmit">Create</el-button>
+            <el-button type="success" plain @click="onSubmit">Update</el-button>
             <el-button @click="dialogVisible = false">Cancel</el-button>
         </el-form-item>
         </el-form>
     </el-dialog>
-    <div class="flex flex-row">
-        <div>
-            <el-avatar shape="square" :size="100" :fit="fit" :src="url"></el-avatar>
+    <div class="">
+        <div class="float-left w-1/4">
+        <div class="block"><el-avatar shape="square" :size="300" :src="squareUrl"></el-avatar></div>
         </div>
-        <div class="ml-48 h-96 flex flex-col justify-between">
+        <div class="ml-48 h-96 grid grid-cols-3 profile-div px-2 py-2">
             <div class="text-profile">
                 <span>Name: </span>
                 <span>
@@ -61,20 +63,21 @@
             <div class="text-profile">
                 <span>Email: </span> {{$auth.user.data.email}} </div>
             <div class="text-profile">
-                <span>Telephone: </span>{{$auth.user.data.telephone}}</div>
+                <span>Sex: </span>
+                <span v-if="$auth.user.data.sex == 1">male
+                </span>
+                <span v-else>female</span>
+                </div>
             <div class="text-profile">
                 <span>Age: </span>{{$auth.user.data.age}}</div>
             <div class="text-profile">
                 <span>Mode: </span>{{$auth.user.data.mode.name}}</div>
             <div class="text-profile">
-                <el-select class="disable" v-model="form.level_id" placeholder="please select your zone" disabled>
-                <el-option v-for="level in levels" :key="level.id" :label="level.name_vi" :value="level.id"></el-option>
+                <span>Experience: {{$auth.user.data.level_id.name_en}} </span>
             </el-select>
             </div>
             <div class="text-profile">
-                <el-select class="disable" v-model="form.target_id" placeholder="please select your zone" disabled>
-                <el-option v-for="target in targets" :key="target.id" :label="target.name" :value="target.id"></el-option>
-            </el-select>
+                <span>Target: {{$auth.user.data.target_id.name}} </span>
             </div>
             <div class="text-profile">
                 <span>Weight: </span>{{$auth.user.data.weight}}</div>
@@ -116,6 +119,9 @@ export default {
                 target_id: [
                     { required: true, message: 'Please select Activity zone', trigger: 'change' }
                 ],
+                sex: [
+                    { required: true, message: 'Please select Activity zone', trigger: 'change' }
+                ],
                 level_id: [
                     { required: true, message: 'Please select Activity zone', trigger: 'change' }
                 ],
@@ -124,10 +130,20 @@ export default {
                 ],
         },
             dialogVisible: false,
-            url: "https://vnn-imgs-a1.vgcloud.vn/image1.ictnews.vn/_Files/2020/03/17/trend-avatar-1.jpg",
+            squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
             fit: "contain",
             targets: [],
-            levels: []
+            levels: [],
+            sexs: [
+                {
+                    name: "Male",
+                    id: 1
+                },
+                {
+                    name: "FeMale",
+                    id: 0
+                }
+            ]
         }
     },
 
@@ -138,7 +154,7 @@ export default {
                     try{
                         const formUpdate = {
                             name: this.form.name,
-                            telephone: this.form.telephone,
+                            sex: this.form.sex,
                             target_id: this.form.target_id,
                             level_id: this.form.level_id,
                             age: this.form.age,
@@ -147,6 +163,8 @@ export default {
                             wrist: this.form.wrist,
                         }
                         await update(this.$axios, this.$route.params.user, formUpdate)
+                        this.$message.success('Update successfully')
+                        window.location.reload(true)
                     }catch(e){
                         this.$message.error('Some thing went wrong')
                     }
@@ -188,6 +206,10 @@ export default {
         .el-input__inner{
             color: black !important;
         }
+    }
+
+    .profile-div{
+        background-color: #F5F7FA;
     }
     
 </style>
