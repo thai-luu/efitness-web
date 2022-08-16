@@ -66,6 +66,7 @@ export default {
 
     methods: {
         async fetchExercise(search) {
+            search.sys = this.active
             const training_sessions = await indexTrainingSession(this.$axios, search)
             this.training_sessions = training_sessions.data,
             this.total = training_sessions.meta.total,
@@ -76,13 +77,21 @@ export default {
         offDialog () {
             this.$emit('offDialogTraining', false)
         },
-        changeTab (value) {
+        async changeTab (value) {
             this.active = value
-            this.$router.push({
-                query: _assign({}, this.$route.query, {
-                    ['sys']: value,
-                }),
-            })
+            const search= {
+                sys: this.active
+            }
+            const training_sessions = await indexTrainingSession(this.$axios, search)
+            this.training_sessions = training_sessions.data,
+            this.total = training_sessions.meta.total,
+            this.pageSize = training_sessions.meta.per_page,
+            this.currentPage = training_sessions.meta.current_page
+            // this.$router.push({
+            //     query: _assign({}, this.$route.query, {
+            //         ['sys']: value,
+            //     }),
+            // })
             
         },
         

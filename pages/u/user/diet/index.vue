@@ -104,7 +104,7 @@
                 >
                 <span v-if="form.evaluate.protein == -1">Thiếu protein</span>
                 <span v-if="form.evaluate.protein == 1"> Thừa protein</span>
-                <span v-if="form.evaluate.needProtein">(mức protein phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needProtein}}) </span>
+                <span v-if="form.evaluate.needProtein">(mức protein phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needProtein}}%) </span>
                 </el-tag>
                 <el-tag
                 type="warning"
@@ -113,7 +113,7 @@
                 >
                 <span v-if="form.evaluate.carb == -1">Thiếu carb</span>
                 <span v-if="form.evaluate.carb == 1"> Thừa carb</span>
-                <span v-if="form.evaluate.needCarb">(mức cacbohydrat phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needCarb}}) </span>
+                <span v-if="form.evaluate.needCarb">(mức cacbohydrat phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needCarb}}%) </span>
                 </el-tag>
                 <el-tag
                 type="warning"
@@ -122,7 +122,7 @@
                 >
                 <span v-if="form.evaluate.fat == -1">Thiếu fat</span>
                 <span v-if="form.evaluate.fat == 1"> Thừa fat</span>
-                <span v-if="form.evaluate.needFat">(mức fat phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needFat}}) </span>
+                <span v-if="form.evaluate.needFat">(mức fat phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needFat}}%) </span>
                 </el-tag>
                 <el-tag
                 type="warning"
@@ -131,7 +131,7 @@
                 >
                 <span v-if="form.evaluate.cenluloza == -1">Thiếu cenluloza</span>
                 <span v-if="form.evaluate.cenluloza == 1"> Thừa cenluloza</span>
-                <span>(mức cenluloza phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needCenluloza}}) </span>
+                <span>(mức cenluloza phù hợp nhất với thể trạng và mục tiêu của bạn: {{form.evaluate.needCenluloza}}%) </span>
                 </el-tag>
             </div>
             <br>

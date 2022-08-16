@@ -1,21 +1,21 @@
 <template>
 <el-form ref="form" v-model="lesson" label-width="120px">
-  <el-form-item label="Dành cho người">
+  <el-form-item label="Dành cho người" :error="error.mode_id">
     <el-select  multiple filterable v-model="lesson.mode_id" placeholder="please select mode">
       <el-option v-for="(mode, index) in modes" :key="mode.id" :label="mode.name" :value="mode.id"></el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="Mục tiêu">
+  <el-form-item label="Mục tiêu" :error="error.target_id">
     <el-select  multiple filterable v-model="lesson.target_id" placeholder="please select mode">
       <el-option v-for="(target, index) in targets" :key="target.id" :label="target.name" :value="target.id"></el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="Thêm buổi tập">
+  <el-form-item label="Thêm buổi tập" :error="error.trainingSession">
     <el-select  multiple filterable v-model="lesson.trainingSessions" placeholder="please select mode">
       <el-option v-for="(trainingSession, index) in trainingSessions" :key="trainingSession.id" :label="trainingSession.desc" :value="trainingSession.id"></el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="Name">
+  <el-form-item label="Name" :error="error.name">
     <el-input type="text" v-model="lesson.name"></el-input>
   </el-form-item>
   <el-form-item label="Note">
@@ -47,6 +47,7 @@ export default {
     data (){
         return {
             targets: [],
+            error: {}
         }
     },
     created () {
@@ -60,6 +61,8 @@ export default {
             this.$message.success('Update successfully')
             this.$router.push('/admin/example_lesson')
           } catch (error) {
+            if(error.response)
+            this.error = error.response.data.errors
             this.$message.error('Some thing went wrong')
           }
           

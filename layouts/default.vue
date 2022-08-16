@@ -15,7 +15,8 @@ export default{
    Footer,
    Header,
    Banner,
- }
+ },
+ auth: false,
 }
 </script>
 

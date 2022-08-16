@@ -1,38 +1,44 @@
 <template>
-<el-form ref="form" v-model="form" label-width="120px">
-  <el-form-item label="Name">
-    <el-input type="text" v-model="form.name"></el-input>
+<div>
+<div class="bg-gray-800 pt-3">
+    <div class="rounded-tl-3xl bg-gradient-to-r from-blue-900 to-gray-800 p-4 shadow text-2xl text-white">
+      <h1 class="font-bold pl-2">Create food</h1>
+    </div>
+</div>
+<el-form ref="form" v-model="form" label-width="120px" class="createFoodsAdmin">
+  <el-form-item label="Name" :error="error.name">
+    <el-input type="text" v-model="form.name" ></el-input>
   </el-form-item>
-  <el-form-item label="carb">
-    <el-input type="number" v-model="form.carb"></el-input>
+  <el-form-item label="carb" :error="error.carb">
+    <el-input type="number" v-model="form.carb" :error="error.carb"></el-input>
   </el-form-item>
-  <el-form-item label="protein">
-    <el-input type="number" v-model="form.protein"></el-input>
+  <el-form-item label="protein" :error="error.protein">
+    <el-input type="number" v-model="form.protein" :error="error.protein"></el-input>
   </el-form-item>
-  <el-form-item label="fat">
+  <el-form-item label="fat" :error="error.fat">
     <el-input type="number" v-model="form.fat"></el-input>
   </el-form-item>
-  <el-form-item label="cenluloza">
+  <el-form-item label="cenluloza" :error="error.cenluloza">
     <el-input type="number" v-model="form.cenluloza"></el-input>
   </el-form-item>
-  <el-form-item label="vitaminA">
-    <el-input type="number" v-model="form.vitaminA"></el-input>
+  <el-form-item label="calcium" :error="error.calcium">
+    <el-input type="number" v-model="form.calcium"></el-input>
   </el-form-item>
-  <el-form-item label="vitaminB">
-    <el-input type="number" v-model="form.vitaminB"></el-input>
+  <el-form-item label="cholesteron">
+    <el-input type="number" v-model="form.cholesteron" :error="error.cholesteron"></el-input>
   </el-form-item>
-  <el-form-item label="kali">
-    <el-input type="number" v-model="form.kali"></el-input>
+  <el-form-item label="trans" :error="error.trans">
+    <el-input type="number" v-model="form.trans"></el-input>
   </el-form-item>
-  <el-form-item label="natri">
-    <el-input type="number" v-model="form.natri"></el-input>
+  <el-form-item label="sodium" :error="error.sodium">
+    <el-input type="number" v-model="form.sodium"></el-input>
   </el-form-item>
-  <el-form-item label="classify">
+  <el-form-item label="classify" :error="error.classify">
     <el-select v-model="form.classify_id" placeholder="please select your classify">
       <el-option v-for="(classify,index) in classifies" :key="classify.id" :label="classify.name" :value="classify.id">{{classify.name}}</el-option>
     </el-select>
   </el-form-item>
-  <el-form-item label="calo">
+  <el-form-item label="calo" :error="error.calo">
     <el-input type="number" v-model="form.calo"></el-input>
   </el-form-item>
   <el-form-item>
@@ -40,6 +46,7 @@
     <el-button>Cancel</el-button>
   </el-form-item>
 </el-form>
+</div>
 </template>
 <script>
 import { store } from '~/api/admin/food'
@@ -56,12 +63,14 @@ export default {
                 fat:'',
                 protein:'',
                 cenluloza:'',
-                vitaminA:'',
-                vitaminB:'',
+                trans:'',
+                calcium:'',
+                sodium:'',
                 classify:'',
-                kali:'',
-                natri:'',
-            }
+                cholesteron:'',
+                calo:'',
+            },
+            error:{}
         }
     },
     async asyncData({app}){
@@ -79,8 +88,23 @@ export default {
     },
     methods:{
       async onSubmit(){
-        await store(this.$axios,this.form)
+        try {
+          await store(this.$axios,this.form)
+          this.$message.success('Create successfully')
+        } catch (error) {
+          if(error.response)
+          this.error = error.response.data.errors
+          this.$message.error("Some thing went wrong")
+        }
+        
         },
     }
 }
 </script>
+<style lang="scss">
+  .createFoodsAdmin{
+    .el-input{
+      width: 200px;
+    }
+  }
+</style>

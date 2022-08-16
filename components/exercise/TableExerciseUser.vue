@@ -66,7 +66,7 @@
             width="120">
         <template slot-scope="scope">
             <el-button @click="onDialog(scope.row)" type="text" size="small">Edit</el-button>
-            <el-button type="text" size="small" @click="deleteExercise(scope.row)">Delete</el-button>
+            <el-button type="text" size="small" @click="deleteExercise(scope.row.id)">Delete</el-button>
         </template>
         </el-table-column>
         </el-table>
@@ -78,6 +78,7 @@
 <script>
 import Pagination from '~/components/shared/Pagination.vue'
 import SearchExercise from '~/components/shared/exercise/SearchExercise.vue'
+import { deleteExercise, deleteMultiple } from '~/api/user/exercise'
 import { allMuscles } from '~/api/static' 
 export default {
   components: { SearchExercise, Pagination },
@@ -106,16 +107,30 @@ export default {
             this.$emit('onDialog', exercise)
         },
 
-        deleteExercise () {
-            this.$emit('fetchExercise')
+        async deleteExercise (id) {
+            try {
+                await deleteExercise(this.$axios, id)
+                this.$emit('fetchExercise')
+                this.$message.success('Deleted succesfully')
+            } catch (error) {
+                this.$message.error('Some thing went wrong')
+            }
+            
         },
 
-        deleteExercises () {
+        async deleteExercises () {
             const arrayId = []
             this.arrayExercise.forEach((item) => {
                 arrayId.push(item.id)
             })
-            this.$emit('fetchExercise')
+            try {
+                await deleteMultiple(this.$axios, arrayId)
+                this.$emit('fetchExercise')
+                this.$message.success('Deleted succesfully')
+            } catch (error) {
+                this.$message.error('Some thing went wrong')
+            }
+            
         },
 
         handleSelectionChange (value) {

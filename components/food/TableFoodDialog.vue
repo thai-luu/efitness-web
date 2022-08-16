@@ -143,6 +143,7 @@ export default {
 
     methods: {
         async fecthFoods(search) {
+            search.sys = this.active
             const foods = await indexFood(this.$axios, search)
             this.foods = foods.data, 
             this.total = foods.meta.total,
@@ -150,13 +151,21 @@ export default {
             this.currentPage = foods.meta.current_page
         },
 
-        changeTab (value) {
+        async changeTab (value) {
             this.active = value
-            this.$router.push({
-                query: _assign({}, this.$route.query, {
-                    ['sys']: value,
-                }),
-            })
+            const search= {
+                sys: this.active
+            }
+            const foods = await indexFood(this.$axios, search)
+            this.foods = foods.data, 
+            this.total = foods.meta.total,
+            this.pageSize = foods.meta.per_page,
+            this.currentPage = foods.meta.current_page
+            // this.$router.push({
+            //     query: _assign({}, this.$route.query, {
+            //         ['sys']: value,
+            //     }),
+            // })
             
         },
 

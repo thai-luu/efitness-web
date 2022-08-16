@@ -1,2 +1,1 @@
-import axios from 'axios'
-export const register = data => axios.post('/user/register',data)
+export const register = (axios, data) => axios.post('/api/auth/user/signup',data)

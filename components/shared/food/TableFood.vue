@@ -35,23 +35,23 @@
             width="120">
         </el-table-column>
         <el-table-column
-            prop="vitaminA"
-            label="VitaminA"
+            prop="calcium"
+            label="calcium"
             width="120">
         </el-table-column>
         <el-table-column
-            prop="vitaminB"
-            label="VitaminB"
+            prop="sodium"
+            label="sodium"
             width="120">
         </el-table-column>
         <el-table-column
-            prop="natri"
-            label="Natri"
+            prop="trans"
+            label="trans"
             width="120">
         </el-table-column>
         <el-table-column
-            prop="kali"
-            label="Kali"
+            prop="cholesteron"
+            label="cholesteron"
             width="120">
         </el-table-column>
         <el-table-column
@@ -70,16 +70,19 @@
             label="Operations"
             width="120">
             <template slot-scope="{row}">
-            <el-button @click="onEdit(row.id)" type="text" size="small">Detail</el-button>
-            <el-button type="text" size="small">Edit</el-button>
+            <el-button @click="onDialog(row)" type="text" size="small">Edit</el-button>
+            <el-button type="text" @click="delFood(row.id)" size="small">Delete</el-button>
             </template>
         </el-table-column>
         </el-table>
         <pagination v-bind="{ currentPage, total, pageSize }" />
+        <el-button type="danger" @click="deleteArrFood" plain>Delete food</el-button>
+        <br>
   </div>
 </template>
 <script>
 import Pagination from '~/components/shared/Pagination.vue'
+import { deleteFood, deleteMultiple } from '~/api/user/food'
 export default {
     components: {
       Pagination
@@ -100,9 +103,39 @@ export default {
     methods: {
         handleSelectionChange(val) {
             this.multipleSelection = val;
-            this.$emit('emitFood', this.multipleSelection)
+            
+            this.$emit('emitFood', arrId)
         },
         
+        async delFood(id){
+            try {
+               await deleteFood(this.$axios, id) 
+               this.$message.success('Deleted successfully')
+               this.$emit('fetchFood')
+            } catch (error) {
+                this.$message.error('Some thing went wrong')
+            }
+            
+        },
+
+        async deleteArrFood(){
+            try {
+                const arrId = [] 
+                this.multipleSelection.forEach((item) => {
+                    arrId.push(item.id)
+                })
+               await deleteMultiple(this.$axios, arrId) 
+               this.$message.success('Deleted successfully')
+               this.$emit('fetchFood')
+            } catch (error) {
+                this.$message.error('Some thing went wrong')
+            }
+        },
+
+        onDialog (food) {
+            console.log(food)
+            this.$emit('onDialog', food)
+        },
     }
 }
 </script>

@@ -23,18 +23,6 @@
                     >
                 </el-table-column>
                 <el-table-column
-                    prop="calories"
-                    label="Calories"
-                    >
-
-                </el-table-column>
-                <el-table-column
-                    prop="time"
-                    label="Time"
-                    >
-
-                </el-table-column>
-                <el-table-column
                     fixed="right"
                     label="Operations"
                     width="120"

@@ -18,6 +18,6 @@ export default {
     components:{
         Header,Sidebar
     },
-
+    auth: false,
 }
 </script>

@@ -41,23 +41,23 @@
         width="120">
       </el-table-column>
       <el-table-column
-        prop="vitaminA"
-        label="VitaminA"
+        prop="calcium"
+        label="Calcium"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="vitaminB"
-        label="VitaminB"
+        prop="sodium"
+        label="Sodium"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="natri"
-        label="Natri"
+        prop="cholesteron"
+        label="Cholesteron"
         width="120">
       </el-table-column>
       <el-table-column
-        prop="kali"
-        label="Kali"
+        prop="trans"
+        label="Trans"
         width="120">
       </el-table-column>
       <el-table-column

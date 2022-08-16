@@ -1,7 +1,7 @@
 <template>
 <div>
   <diet-list :diets="diets" />
-  <lesson-list :exercise_modes="exercise_modes" />
+  <lesson-list :lessons="lessons" />
 </div>
 </template>
 
@@ -10,7 +10,7 @@
 import DietList from '../components/diet/DietList.vue'
 import LessonList from '../components/lesson/LessonList.vue'
 import { indexWeb } from '~/api/diet'
-import { index as allExerciseMode } from '~/api/exercise_mode'
+import { index } from '~/api/lesson'
 import { mapState } from 'vuex';
 export default {
   name: 'IndexPage',
@@ -25,10 +25,10 @@ export default {
      
         try{
             const diets =  await indexWeb(app.$axios)
-            const exercise_modes =  await allExerciseMode(app.$axios)
-            return  { diets:diets, exercise_modes:exercise_modes }
+            const {data: lessons} =  await index(app.$axios)
+            return  { diets:diets, lessons:lessons }
         }catch (err){
-          return {diets:[],exercise_modes:[] }
+          return {diets:[],lessons:[] }
         }
 
     }, 

@@ -23,7 +23,6 @@
             router
             >
                 <el-menu-item index="/exercise">Exercise</el-menu-item>
-                <el-menu-item index="/lesson">Example lesson</el-menu-item>
                 <el-menu-item index="/about">About Us</el-menu-item>
                 <el-menu-item index="/organization">Organization</el-menu-item>
                 

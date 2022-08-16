@@ -3,14 +3,14 @@
     <div class="container px-3 mx-auto flex flex-wrap flex-col md:flex-row items-center">
         <!--Left Col-->
         <div class="flex flex-col w-full md:w-2/5 justify-center items-start text-center md:text-left">
-          <p class="uppercase tracking-loose w-full">What business are you?</p>
+          <p class="uppercase tracking-loose w-full">Bạn gặp khó khăn trong việc xây dựng chế độ ăn uống và luyện tập khoa học ?</p>
           <h1 class="my-4 text-5xl font-bold leading-tight">
-            Main Hero Message to sell yourself!
+            Hãy đăng nhập ngay để chúng tôi có thể hỗ trợ bạn
           </h1>
           <p class="leading-normal text-2xl mb-8">
-            Sub-hero message, not too long and not too short. Make it just right!
+            Chúng tôi sẽ giúp bạn xây dựng một chế độ ăn uống, tập luyện khoa học và lành mạnh dựa theo mục tiêu mà bạn hướng đến.
           </p>
-          <nuxt-link to="user/account/login">
+          <nuxt-link to="/user/account/login">
           <button class="mx-auto lg:mx-0 hover:underline bg-white text-gray-800 font-bold rounded-full my-6 py-4 px-8 shadow-lg focus:outline-none focus:shadow-outline transform transition hover:scale-105 duration-300 ease-in-out">  
             {{$t('login')}}
           </button>

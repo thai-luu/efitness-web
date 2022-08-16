@@ -1,9 +1,9 @@
 <template>
 <el-form class="createDiet" ref="form" v-model="diet" label-width="120px">
-  <el-form-item label="Tên">
+  <el-form-item label="Tên" :error="error.name">
     <el-input type="text" v-model="diet.name"></el-input>
   </el-form-item>
-  <el-form-item label="Dành cho">
+  <el-form-item label="Dành cho"  :error="error.target_id || error.mode_id">
       <div v-for="(mode_target, index) in diet.mode_target" key="index" class="mode_target" >
           <span class="w-24">Tạng người: </span>
           <el-select v-model="mode_target.mode" placeholder="Chọn tạng người">
@@ -18,27 +18,27 @@
       <br>
     <el-button class="text-center" type="success" @click="addModeTarget" plain>Add mode and target</el-button>
   </el-form-item>
-  <el-form-item label="Protein">
+  <el-form-item label="Protein" :error="error.protein">
     <el-input type="number" v-model="diet.protein">
       <template slot="append">%</template>
     </el-input>
   </el-form-item>
-  <el-form-item label="Carb">
+  <el-form-item label="Carb" :error="error.carb">
     <el-input type="number" v-model="diet.carb">
       <template slot="append">%</template>
     </el-input>
   </el-form-item>
-  <el-form-item label="Fat">
+  <el-form-item label="Fat" :error="error.fat">
     <el-input type="number" v-model="diet.fat">
       <template slot="append">%</template>
     </el-input>
   </el-form-item>
-  <el-form-item label="Cenluloza">
+  <el-form-item label="Cenluloza" :error="error.cenluloza">
     <el-input type="number" v-model="diet.cenluloza">
       <template slot="append">%</template>
     </el-input>
   </el-form-item>
-  <el-form-item label="Range">
+  <el-form-item label="Range" :error="error.range">
     <el-input type="number" v-model="diet.range">
       <template slot="append">%</template>
     </el-input>
@@ -53,14 +53,14 @@
 import { showDiet } from '~/api/admin/diet'
 import { modeLists } from '~/api/mode';
 import { indexTargets } from '~/api/static'
-import { create } from '~/api/diet'
+import { update } from '~/api/diet'
 export default {
   props: {
   },
     layout:'admin',
     data (){
       return {
-
+        error: {}
       }
     },
     async asyncData({app, params}){
@@ -84,9 +84,12 @@ export default {
     methods:{
         async onSubmit(){
           try{
-            await create(this.$axios,this.form)
+            await update(this.$axios, this.params.id, this.form)
+            this.$message.success('Updated successfully')
           } catch(e) {
-            this.$notify.error(e.response.data.message)
+            if(e.response)
+              this.error = e.response.data.errors
+            this.$message.error('Some thing went wrong')
           }
     },
 

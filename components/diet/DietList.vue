@@ -1,12 +1,14 @@
 <template>
     <div class="bg-white border-b py-8">
-        <div class="container max-w-5xl mx-auto m-8">
+        <div class="container mx-auto m-8">
             <h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
             {{$t('sampleDiet')}}
             </h1>
-            <div class="w-full mb-4">
-            <div class="h-1 mx-auto gradient w-64 opacity-25 my-0 py-0 rounded-t"></div>
-            </div>
+            <el-carousel :interval="4000" type="card" height="200px">
+                <el-carousel-item v-for="diet in diets" :key="diet.id">
+                    <diet-item :diet="diet"/>
+                </el-carousel-item>
+            </el-carousel>
         </div>
     </div>
 </template>

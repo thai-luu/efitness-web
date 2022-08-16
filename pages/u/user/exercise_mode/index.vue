@@ -28,7 +28,7 @@
                 </el-form-item>
                 <el-form-item  label="Muscle" prop="muscle">
                     <el-select
-                        v-model="exercise.muscle"
+                        v-model="exercise.muscles"
                         multiple
                         filterable
                         default-first-option
@@ -60,7 +60,7 @@ import _mapKeys from 'lodash/mapKeys'
 import _cloneDeep from 'lodash/cloneDeep';
 import { exerciseCategory, allMuscles } from '~/api/static'
 import { createExercise } from '~/api/user/exercise'
-import { index } from '~/api/user/exercise'
+import { index, update } from '~/api/user/exercise'
 import { getExercises } from '~/api/exercise'
 import ListSystemExercise from '~/components/ListSystemExercise.vue'
 export default {
@@ -87,7 +87,7 @@ export default {
         rules: {
                 name: [
                     { required: true, message: 'Please input name', trigger: 'blur' },
-                    { max: 15, message: 'max 15 character', trigger: 'blur' },
+                    { max: 50, message: 'max 50 character', trigger: 'blur' },
                 ],
                 category: [
                     { required: true, message: 'Please input category', trigger: 'change' },
@@ -104,7 +104,7 @@ export default {
                 categories_id: '',
                 compound: false,
                 failure: '',
-                muscle:''
+                muscles:''
         },
         title:'', 
         exerciseSelected: null
@@ -141,7 +141,7 @@ export default {
     methods: {
         async fetchExercise () {
             const {data: myExercise} = await index(this.$axios)
-            this.myExercise = myExercise
+            this.exercises = myExercise
         },
 
         convertMuscle (muscles) {
@@ -172,8 +172,15 @@ export default {
             return muscleList
         },
 
-        editExercise () {
-
+        async editExercise () {
+            try {
+                await update(this.$axios, this.exercise.id, this.exercise)
+                this.fetchExercise()
+                this.$message.success('Updated successfully')
+                this.dialogVisible = false
+            } catch (error) {
+                this.$message.error('Some thing went wrong')
+            }
         },
 
         openDialog () {
@@ -185,7 +192,7 @@ export default {
         openDialogEdit (exercise) {
             this.dialogVisible = true
             this.exercise = _cloneDeep(exercise)
-            this.exercise.muscle = _cloneDeep(this.convertMuscleEdit(this.exercise.muscle))
+            this.exercise.muscles = _cloneDeep(this.convertMuscleEdit(this.exercise.muscles))
             this.exercise.category = _cloneDeep(exercise.category.id)
             console.log(this.muscleList)
             this.title = 'Edit exercise'
@@ -198,7 +205,7 @@ export default {
                 categories_id: '',
                 compound: false,
                 failure: '',
-                muscle:''
+                muscles:''
             }
             this.dialogVisible = false
         },
@@ -235,7 +242,7 @@ export default {
                             exercise_categories_id: this.exercise.category,
                             rm: this.exercise.failure,
                             compound: this.exercise.compound,
-                            muscle: this.exercise.muscle
+                            muscles: this.exercise.muscles
                         }
                         console.log(formExercise)
                         await createExercise(this.$axios, formExercise)

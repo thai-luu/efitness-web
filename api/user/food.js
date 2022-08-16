@@ -1,1 +1,5 @@
 export const index = (axios, params) => axios.get('/api/food', { params }).then(_ => _.data)
+export const create = (axios, data) => axios.post('/api/food', data)
+export const update = (axios, id, data) => axios.put(`/api/food/${id}`, data)
+export const deleteFood = (axios, id) => axios.delete(`/api/food/${id}`)
+export const deleteMultiple = (axios, data) => axios.post('/api/food/delete-multiple', data)

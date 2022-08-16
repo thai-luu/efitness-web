@@ -1,9 +1,9 @@
 <template>
 <el-form class="createDiet" ref="form" v-model="form" label-width="120px">
   <el-form-item label="Tên">
-    <el-input type="text" v-model="form.name"></el-input>
+    <el-input type="text" v-model="form.name" :error="error.name"></el-input>
   </el-form-item>
-  <el-form-item label="Dành cho">
+  <el-form-item label="Dành cho" :error="error.target_id || error.mode_id">
       <div v-for="(mode_target, index) in form.mode_target" key="index" class="mode_target" >
           <span class="w-24">Tạng người: </span>
           <el-select v-model="mode_target.mode" placeholder="Chọn tạng người">
@@ -18,27 +18,27 @@
       <br>
     <el-button class="text-center" type="success" @click="addModeTarget" plain>Add mode and target</el-button>
   </el-form-item>
-  <el-form-item label="Protein">
+  <el-form-item label="Protein" :error="error.protein">
     <el-input type="number" v-model="form.protein">
       <template slot="append">%</template>
     </el-input>
   </el-form-item>
-  <el-form-item label="Carb">
+  <el-form-item label="Carb" :error="error.carb">
     <el-input type="number" v-model="form.carb">
       <template slot="append">%</template>
     </el-input>
   </el-form-item>
-  <el-form-item label="Fat">
+  <el-form-item label="Fat" :error="error.fat">
     <el-input type="number" v-model="form.fat">
       <template slot="append">%</template>
     </el-input>
   </el-form-item>
-  <el-form-item label="Cenluloza">
+  <el-form-item label="Cenluloza" :error="error.cenluloza">
     <el-input type="number" v-model="form.cenluloza">
       <template slot="append">%</template>
     </el-input>
   </el-form-item>
-  <el-form-item label="Range">
+  <el-form-item label="Range" :error="error.range">
     <el-input type="number" v-model="form.range">
       <template slot="append">%</template>
     </el-input>
@@ -68,7 +68,8 @@ export default {
           cenluloza:'',
           mode_target:[],
           range: '',
-        }
+        },
+        error: {}
       }
     },
     async asyncData({app}){
@@ -88,9 +89,11 @@ export default {
         async onSubmit(){
           try{
             await create(this.$axios,this.form)
-            console.log(123)
+            this.$message.success('Created successfully')
           } catch(e) {
-            this.$notify.error(e.response.data.message)
+            if(e.response)
+              this.error = e.response.data.errors
+              this.$message.error(e.response.data.message)
           }
     },
 

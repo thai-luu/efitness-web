@@ -30,33 +30,32 @@
             >
             </el-table-column>
             <el-table-column
-                prop="vitaminA"
-                label="Vitamin A"
+                prop="calcium"
+                label="Calcium"
                 width="100"
             >
             </el-table-column>
             <el-table-column
-                prop="vitaminB"
-                label="Vitamin B"
+                prop="sodium"
+                label="Sodium"
                 width="100"
             >
             </el-table-column>
             <el-table-column
-                prop="natri"
-                label="Natri"
+                prop="trans"
+                label="Trans"
                 width="100"
             >
             </el-table-column>
             <el-table-column
-                prop="kali"
-                label="Kali"
+                prop="cholesteron"
+                label="Cholesteron"
                 width="100"
             >
             </el-table-column>
             <el-table-column
                 prop="calo"
                 label="Calories/100g"
-                width="100"
             >
             </el-table-column>
             <el-table-column

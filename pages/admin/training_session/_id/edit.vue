@@ -1,13 +1,13 @@
 <template>
     <div>
         <el-form :model="training_session" ref="formExercise" label-width="150px" class="demo-ruleForm">
-            <el-form-item label="Name" prop="name">
+            <el-form-item label="Name" prop="name" :error="error.name">
                 <el-input class="w-40" v-model="training_session.name"></el-input>
             </el-form-item>
             <el-form-item label="Desc" prop="desc">
                 <el-input class="w-40" v-model="training_session.desc"></el-input>
             </el-form-item>
-            <el-form-item label="Exercise:" prop="Exercise">
+            <el-form-item label="Exercise:" prop="Exercise" :error="error.exercises">
             </el-form-item>
             <el-form-item v-for="(exercise, index) in training_session.exercises" :key="exercise.id" :label="exercise.name" prop="categories_id">
                 <div class="text-black" v-if="exercise.category.id === 2">
@@ -37,7 +37,7 @@
             </span>
             </div>
             <el-form-item>
-                <el-button type="primary" plain @click="submitForm">Submit</el-button>
+                <el-button type="primary" plain @click="submitForm">Update</el-button>
                 <el-button @click="resetForm">Reset</el-button>
             </el-form-item>
         </el-form>
@@ -83,6 +83,7 @@ export default {
     data () {
         return {
             dialogVisible: false,
+            error: {}
         }
     },
 
@@ -169,6 +170,8 @@ export default {
                 console.log(this.$route)
                 this.$router.push(`/admin/training_session`)
             } catch (error) {
+                if(error.response)
+                this.error = error.response.data.errors
                 this.$message.error('Some thing went wrong')
             }
         },
